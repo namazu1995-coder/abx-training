@@ -741,10 +741,11 @@
 
   var PRINCIPLES = [
     {t:"感染臓器・重症度を推定する", d:"症状・身体所見・検査値から感染臓器を特定し、qSOFAやA-DROP、TG18のような臓器別の重症度分類を用いて外来/入院/ICUのどこで治療すべきかを判断する。"},
-    {t:"想定される起因菌を推定する", d:"感染臓器ごとに頻度の高い起因菌を想定する。市中発症か医療関連か、誤嚥・膿瘍形成・嫌気性菌カバーの要否など、菌種の推定根拠を言語化する。"},
+    {t:"想定される起因菌を推定する", d:"感染臓器ごとに頻度の高い起因菌を想定する。グラム陰性桿菌は、大腸菌・Proteus mirabilis・Klebsiella属などの腸内細菌(耐性化するとESBL産生菌)と、Pseudomonas aeruginosa・Acinetobacter属などのブドウ糖非発酵菌(多剤耐性化しやすい)に大別すると整理しやすい。同じ腸内細菌でもEnterobacter属・Citrobacter freundii・Serratia属などはAmpC過剰産生(治療経過中の耐性化)に注意する。市中発症か医療関連か、誤嚥・膿瘍形成・嫌気性菌カバーの要否など、推定根拠を言語化する。"},
     {t:"患者背景を確認する", d:"アレルギー歴(症状・発症時間・重症度)、腎機能、免疫状態(好中球数・臓器移植・ステロイド使用など)、直近の抗菌薬使用歴・医療曝露歴・耐性菌検出歴を確認する。"},
     {t:"エンピリック選択と投与量・投与経路を決定する", d:"想定起因菌・重症度・患者背景を踏まえ、必要十分な抗菌スペクトラムの薬剤を選び、用量・投与間隔・投与経路(腎機能による調整を含む)を具体的に決める。"},
-    {t:"de-escalationと治療期間を決定する", d:"培養結果が判明したら、感受性のある狭域抗菌薬へ変更できないか必ず検討する。治療期間はガイドラインの目安と臨床的安定度(解熱・症状改善)に基づいて決定し、漫然と継続しない。"}
+    {t:"治療効果を判定する", d:"①自覚症状(「一番つらかった時を10点として今は何点か」など)、②バイタルサイン(体温・血圧・呼吸数・脈拍・SpO2・意識)、③臓器特異的症状(尿路感染なら排尿症状・CVA叩打痛、肺炎なら呼吸困難・喀痰量、胆管炎なら腹痛・黄疸など)、④グラム染色所見(尿路感染なら細菌尿の消失、肺炎なら喀痰からの菌の消失)の4つを総合して「効いているか」を判断する。"},
+    {t:"de-escalationと治療期間を決定する", d:"培養結果が判明したら、感受性のある狭域抗菌薬へ変更できないか必ず検討する。治療期間はガイドラインの目安と臨床的安定度に基づいて決定し、漫然と継続しない。"}
   ];
 
   var STORE_KEY = "abx_progress_v1";
@@ -888,7 +889,7 @@
     }
     html += '</div>';
 
-    html += '<button class="principles-cta" data-action="goto-principles"><span><span class="t">エンピリック抗菌薬選択の思考フレームワークを見る</span><span class="s">感染臓器・重症度→起因菌推定→患者背景→選択と用量→de-escalation</span></span><span class="arrow">›</span></button>';
+    html += '<button class="principles-cta" data-action="goto-principles"><span><span class="t">エンピリック抗菌薬選択の思考フレームワークを見る</span><span class="s">感染臓器・重症度→起因菌推定→患者背景→選択と用量→治療効果判定→de-escalation</span></span><span class="arrow">›</span></button>';
 
     if(state.reviewOnly){
       html += '<div class="section-head"><h2>復習対象の症例</h2><span class="count">'+rev.length+'件</span></div>';
@@ -1022,13 +1023,18 @@
   /* ---------------- RENDER: PRINCIPLES ---------------- */
   function renderPrinciples(){
     var html = "";
-    html += '<div class="principles-hero"><div class="eyebrow">エンピリック抗菌薬選択の思考フレームワーク</div><h1>どの症例でも、まずこの順番で考える</h1><p>個々の薬剤名を覚えるより先に、この5ステップを体に染み込ませましょう。</p></div>';
-    html += '<div class="escalation-note"><div class="en-label">⚡ 判断に迷ったら</div><div class="en-body">次のような場面では<mark>自己判断で選択・継続を決めず</mark>、早めに上級医/感染症科へ相談してください。<ul>'+
+    html += '<div class="principles-hero"><div class="eyebrow">エンピリック抗菌薬選択の思考フレームワーク</div><h1>どの症例でも、まずこの順番で考える</h1><p>個々の薬剤名を覚えるより先に、この6ステップを体に染み込ませましょう。</p></div>';
+    html += '<div class="escalation-note"><div class="en-label">⚡ 治療経過が良くないとき</div><div class="en-body">'+
+      'ステップ5の4パラメータで「効いていない」と判断したら、次の3つを順に見直す。<ul>'+
+      '<li><mark>ソースコントロール不良</mark>: 膿瘍や見落としている感染巣はないか(感染性心内膜炎の疣贅、生体内デバイスのバイオフィルム、骨髄炎、前立腺炎、結石・腫瘍による胆管/尿管閉塞など)。ドレナージや造影CT・心エコーによる熱源検索を検討する</li>'+
+      '<li><mark>原因微生物を適切にカバーできていない</mark>: 投与中の抗菌薬が感受性検査で「R」になっていないか、投与量は足りているかを確認する</li>'+
+      '<li><mark>そもそも感染症ではない可能性</mark>: 腫瘍熱、膠原病、薬剤熱、偽痛風など非感染性の病態を再検討する</li>'+
+      '</ul>次のような場面では<mark>自己判断で選択・継続を決めず</mark>、早めに上級医/感染症科へ相談する。<ul>'+
       '<li>重症度評価やソースコントロールの必要性・タイミングに迷うとき</li>'+
       '<li>アレルギー歴の解釈(側鎖の類似性など)に自信が持てないとき</li>'+
       '<li>腎機能・肝機能に応じた用量調整に自信が持てないとき</li>'+
       '<li>治療開始48〜72時間で反応が乏しい、または状態が悪化するとき</li>'+
-      '<li>耐性菌(ESBL産生菌・MRSAなど)が検出されたとき</li>'+
+      '<li>耐性菌(ESBL産生菌・AmpC過剰産生菌・MRSAなど)が検出されたとき</li>'+
       '</ul></div></div>';
     html += '<div class="flow">';
     PRINCIPLES.forEach(function(f,i){
@@ -1038,7 +1044,7 @@
       html += '</div>';
     });
     html += '</div>';
-    html += '<div class="principles-foot">迷ったら、この5つに立ち返る。</div>';
+    html += '<div class="principles-foot">迷ったら、この6つに立ち返る。</div>';
     return html;
   }
 
