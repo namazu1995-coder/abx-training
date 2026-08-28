@@ -16,7 +16,9 @@ start abx-training.html
 
 GitHub Pages: https://namazu1995-coder.github.io/abx-training/
 
-`abx_qr.png` が上記URLのQRコード(スマホ・タブレットで読み込んでそのまま利用可能)。
+![QRコード](abx_qr.png)
+
+上記URLのQRコード(スマホ・タブレットで読み込んでそのまま利用可能)。
 
 ## 医師が確認すべき医学的内容(要レビュー)
 
