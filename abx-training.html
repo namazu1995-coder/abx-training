@@ -1,0 +1,1164 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none';">
+<title>抗菌薬選択トレーニング</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@500;700;900&family=BIZ+UDPGothic:wght@400;700&display=swap">
+<style>
+  :root{
+    --bg:#F4F6FA;
+    --surface:#FFFFFF;
+    --surface-2:#E9EDF5;
+    --ink:#151E30;
+    --ink-soft:#48566E;
+    --ink-faint:#54627A;
+    --line:#DCE2ED;
+    --primary:#1E4C8C;
+    --primary-strong:#123566;
+    --primary-tint:#E4ECF9;
+    --accent:#9C5E12;
+    --accent-tint:#FBEDDA;
+    --good:#2E7D4F;
+    --good-tint:#E4F3EA;
+    --warn:#9C5E12;
+    --warn-tint:#FBEDDA;
+    --bad:#B23A3A;
+    --bad-tint:#FBE7E5;
+    --shadow: 0 1px 2px rgba(21,30,48,.06), 0 6px 20px rgba(21,30,48,.05);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0A1322;
+      --surface:#111F35;
+      --surface-2:#17263F;
+      --ink:#EAF0FA;
+      --ink-soft:#A9B9D2;
+      --ink-faint:#8195B4;
+      --line:#243A5C;
+      --primary:#6FA8E8;
+      --primary-strong:#9CC4F2;
+      --primary-tint:#152A49;
+      --accent:#E3A45D;
+      --accent-tint:#33260F;
+      --good:#6FC796;
+      --good-tint:#16301F;
+      --warn:#E3A45D;
+      --warn-tint:#33260F;
+      --bad:#E27C7C;
+      --bad-tint:#3A1B1B;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0A1322;
+    --surface:#111F35;
+    --surface-2:#17263F;
+    --ink:#EAF0FA;
+    --ink-soft:#A9B9D2;
+    --ink-faint:#8195B4;
+    --line:#243A5C;
+    --primary:#6FA8E8;
+    --primary-strong:#9CC4F2;
+    --primary-tint:#152A49;
+    --accent:#E3A45D;
+    --accent-tint:#33260F;
+    --good:#6FC796;
+    --good-tint:#16301F;
+    --warn:#E3A45D;
+    --warn-tint:#33260F;
+    --bad:#E27C7C;
+    --bad-tint:#3A1B1B;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.35);
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--bg);}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:"BIZ UDPGothic","Hiragino Sans","Yu Gothic",system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;
+    line-height:1.65;
+  }
+  h1,h2,h3,.disp{
+    font-family:"Zen Kaku Gothic New","BIZ UDPGothic",system-ui,sans-serif;
+    text-wrap:balance;
+    margin:0;
+  }
+  #app{
+    max-width:520px;
+    margin:0 auto;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    background:var(--bg);
+  }
+  .topbar{
+    position:sticky; top:0; z-index:20;
+    background:var(--bg);
+    border-bottom:1px solid var(--line);
+    padding:14px 18px 12px;
+    display:flex; align-items:center; gap:10px;
+  }
+  .topbar .back{
+    appearance:none; border:none; background:transparent; color:var(--primary);
+    font-size:15px; font-weight:700; cursor:pointer; padding:6px 8px 6px 0;
+    display:flex; align-items:center; gap:2px; min-height:44px;
+    font-family:inherit;
+  }
+  .topbar .title{
+    font-size:15px; font-weight:700; color:var(--ink-soft);
+    letter-spacing:.02em;
+    flex:1;
+    text-align:center;
+    margin-right:34px;
+  }
+  main{flex:1; padding:0 18px 48px;}
+
+  /* ---------- HOME ---------- */
+  .hero{ padding:28px 4px 18px; }
+  .hero .eyebrow{
+    font-size:12px; font-weight:700; letter-spacing:.14em; color:var(--primary);
+    text-transform:uppercase;
+  }
+  .hero h1{ font-size:25px; font-weight:900; color:var(--ink); margin-top:8px; line-height:1.4; }
+  .hero p{ color:var(--ink-soft); font-size:14px; margin-top:10px; max-width:44ch; }
+
+  .progress-card{
+    background:var(--surface); border:1px solid var(--line); border-radius:16px;
+    padding:16px 18px; margin:14px 0 8px; box-shadow:var(--shadow);
+    display:flex; align-items:center; gap:16px;
+  }
+  .progress-text{flex:1;}
+  .progress-text .num{font-size:13px; font-weight:700; color:var(--ink);}
+  .progress-text .sub{font-size:12.5px; color:var(--ink-faint); margin-top:2px;}
+  .review-pill-btn{
+    appearance:none; border:1px solid var(--warn); background:var(--warn-tint); color:var(--warn);
+    font-weight:700; font-size:12.5px; padding:8px 14px; border-radius:999px; cursor:pointer;
+    white-space:nowrap; font-family:inherit;
+    min-height:44px; display:inline-flex; align-items:center;
+  }
+
+  .principles-cta{
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    background:var(--primary-tint); border:1px solid var(--primary); border-radius:16px;
+    padding:14px 18px; margin:10px 0 24px; cursor:pointer;
+    width:100%; text-align:left; font-family:inherit; appearance:none;
+  }
+  .principles-cta .t{display:block; font-size:14px; font-weight:700; color:var(--primary-strong);}
+  .principles-cta .s{display:block; font-size:12px; color:var(--ink-soft); margin-top:2px;}
+  .principles-cta .arrow{color:var(--primary-strong); font-size:18px; flex:none;}
+
+  .section-head{ display:flex; align-items:baseline; gap:8px; margin:26px 0 12px; }
+  .section-head h2{font-size:15px; font-weight:700; color:var(--ink);}
+  .section-head .count{font-size:12px; color:var(--ink-faint); font-weight:400;}
+
+  .case-grid{ display:flex; flex-direction:column; gap:10px; }
+  .case-card{
+    display:flex; align-items:center; gap:14px;
+    background:var(--surface); border:1px solid var(--line); border-radius:14px;
+    padding:14px 14px; cursor:pointer; text-align:left; width:100%;
+    box-shadow:var(--shadow); font-family:inherit;
+    appearance:none;
+  }
+  .case-card:active{ transform:scale(.99); }
+  .case-num{
+    font-family:"Zen Kaku Gothic New",sans-serif; font-weight:900; font-size:13px;
+    color:var(--ink-faint); width:26px; flex:none; font-variant-numeric:tabular-nums;
+  }
+  .case-body{flex:1; min-width:0; display:flex; flex-direction:column; gap:3px;}
+  .case-body .tag{ font-size:11px; font-weight:700; color:var(--primary); }
+  .case-body .hint{
+    font-size:14px; font-weight:600; color:var(--ink); line-height:1.4;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+  }
+  .status-chip{
+    flex:none; align-self:flex-start; font-size:11.5px; font-weight:700; padding:5px 10px; border-radius:999px;
+    white-space:nowrap;
+  }
+  .status-chip.none{ background:var(--surface-2); color:var(--ink-faint); }
+  .status-chip.good{ background:var(--good-tint); color:var(--good); }
+  .status-chip.partial{ background:var(--warn-tint); color:var(--warn); }
+  .status-chip.poor{ background:var(--bad-tint); color:var(--bad); }
+
+  .empty-review{ text-align:center; padding:40px 20px; color:var(--ink-faint); font-size:14px; }
+
+  /* ---------- CASE VIEW ---------- */
+  .case-hero{ padding:22px 0 4px; }
+  .case-hero .tag{ font-size:12px; font-weight:700; color:var(--primary); letter-spacing:.08em; text-transform:uppercase;}
+  .case-hero h1{ font-size:20px; font-weight:900; margin-top:8px; }
+  .vignette{
+    background:var(--surface); border:1px solid var(--line); border-radius:16px;
+    padding:18px 20px; margin-top:16px; box-shadow:var(--shadow); font-size:14.5px; color:var(--ink);
+  }
+  .vitals-line{
+    margin-top:12px; padding-top:12px; border-top:1px dashed var(--line);
+    font-size:13px; color:var(--ink-soft); font-variant-numeric:tabular-nums;
+  }
+  .vitals-line b{color:var(--ink); font-weight:700;}
+
+  .prompt-block{ margin-top:22px; }
+  .prompt-block label{
+    display:block; font-size:13.5px; font-weight:700; color:var(--ink); margin-bottom:8px; line-height:1.5;
+  }
+  .prompt-block label .n{ color:var(--primary); margin-right:6px; }
+  .prompt-block textarea{
+    width:100%; min-height:88px; resize:vertical; border-radius:12px;
+    border:1px solid var(--line); background:var(--surface); color:var(--ink);
+    padding:12px 14px; font-family:inherit; font-size:16px; line-height:1.6;
+  }
+  .prompt-block textarea:focus{ outline:2px solid var(--primary); outline-offset:1px; }
+  .prompt-block textarea::placeholder{ color:var(--ink-faint); }
+
+  .reveal-btn{
+    width:100%; margin-top:24px; appearance:none; border:none; cursor:pointer;
+    background:var(--primary); color:#fff; font-weight:700; font-size:15px;
+    padding:15px; border-radius:14px; font-family:inherit;
+    box-shadow:0 4px 14px rgba(30,76,140,.28);
+    min-height:44px;
+  }
+  .reveal-btn:active{ transform:scale(.99); }
+
+  .answer-wrap{ margin-top:28px; }
+
+  .answer-card{
+    background:var(--surface); border:1px solid var(--line); border-radius:16px;
+    padding:18px 20px; margin-bottom:12px; box-shadow:var(--shadow);
+  }
+  .answer-card h3{
+    font-size:13.5px; font-weight:700; display:flex; align-items:center; gap:8px; margin-bottom:10px;
+  }
+  .answer-card h3 .ico{
+    width:22px;height:22px;border-radius:7px;flex:none; display:flex;align-items:center;justify-content:center;
+    font-size:12px; font-weight:900; color:#fff;
+  }
+  .ico.check{background:var(--primary);}
+  .ico.sum{background:var(--accent);}
+  .answer-card ul{ margin:0; padding-left:20px; font-size:14px; color:var(--ink); }
+  .answer-card li{ margin-bottom:6px; }
+  .answer-card li:last-child{ margin-bottom:0; }
+  mark{
+    background:var(--accent-tint); color:var(--accent); padding:1px 5px; border-radius:5px;
+    font-weight:700; box-decoration-break:clone; -webkit-box-decoration-break:clone;
+  }
+  .mistake-box{
+    margin-top:12px; padding:10px 14px; border-radius:10px;
+    background:var(--bad-tint); color:var(--bad); font-size:12.5px; line-height:1.6;
+  }
+  .mistake-box b{ display:block; font-size:11.5px; font-weight:700; margin-bottom:4px; letter-spacing:.04em; }
+  .mistake-box ul{ margin:0; padding-left:18px; color:var(--bad); }
+  .refs-box{
+    margin-top:14px; padding-top:12px; border-top:1px dashed var(--line);
+    font-size:12px; color:var(--ink-faint);
+  }
+  .refs-box b{ display:block; font-size:11px; font-weight:700; color:var(--ink-faint); margin-bottom:6px; letter-spacing:.04em; }
+  .refs-box ol{ margin:0; padding-left:18px; color:var(--ink-faint); }
+  .refs-box li{ margin-bottom:6px; line-height:1.55; }
+  .refs-box li:last-child{ margin-bottom:0; }
+  .refs-box .ref-source{ color:var(--ink-faint); }
+  .refs-box a{ color:var(--ink-soft); word-break:break-all; }
+
+  .assess-block{ margin-top:26px; }
+  .assess-block .q{ font-size:14px; font-weight:700; margin-bottom:12px; text-align:center; }
+  .assess-row{ display:flex; gap:8px; }
+  .assess-btn{
+    flex:1; appearance:none; cursor:pointer; border-radius:12px; padding:13px 6px;
+    font-family:inherit; font-size:12.5px; font-weight:700; line-height:1.4;
+    border:1.5px solid var(--line); background:var(--surface); color:var(--ink-soft);
+    min-height:44px;
+  }
+  .assess-btn.good{ border-color:var(--good); }
+  .assess-btn.partial{ border-color:var(--warn); }
+  .assess-btn.poor{ border-color:var(--bad); }
+  .assess-btn.good.active{ background:var(--good); color:#fff; }
+  .assess-btn.partial.active{ background:var(--warn); color:#fff; }
+  .assess-btn.poor.active{ background:var(--bad); color:#fff; }
+  .save-warning{
+    margin-top:12px; padding:10px 14px; border-radius:10px;
+    background:var(--bad-tint); color:var(--bad); font-size:12.5px; font-weight:600; line-height:1.5;
+  }
+
+  .after-assess{
+    margin-top:22px; display:flex; flex-direction:column; gap:10px;
+    animation:fadein .3s ease;
+  }
+  @keyframes fadein{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);} }
+  .nav-btn{
+    appearance:none; border:none; cursor:pointer; border-radius:12px; padding:14px;
+    font-family:inherit; font-size:14.5px; font-weight:700; text-align:center;
+    min-height:44px;
+  }
+  .nav-btn.primary{ background:var(--primary); color:#fff; }
+  .nav-btn.ghost{ background:var(--surface-2); color:var(--ink-soft); border:1px solid var(--line); }
+
+  /* ---------- PRINCIPLES VIEW ---------- */
+  .principles-hero{ padding:24px 0 6px; }
+  .principles-hero .eyebrow{ font-size:12px; font-weight:700; color:var(--primary); letter-spacing:.1em; text-transform:uppercase;}
+  .principles-hero h1{ font-size:21px; font-weight:900; margin-top:8px; }
+  .principles-hero p{ font-size:13.5px; color:var(--ink-soft); margin-top:8px; }
+
+  .escalation-note{
+    margin-top:18px; padding:16px 18px; border-radius:14px;
+    background:var(--accent-tint); border:1.5px solid var(--accent);
+  }
+  .escalation-note .en-label{
+    font-size:12px; font-weight:700; letter-spacing:.06em; color:var(--accent); text-transform:uppercase;
+  }
+  .escalation-note .en-body{ font-size:13.5px; color:var(--ink); margin-top:6px; line-height:1.6; }
+  .escalation-note .en-body ul{ margin:6px 0 0; padding-left:18px; }
+  .escalation-note .en-body li{ margin-bottom:4px; }
+
+  .flow{ margin-top:22px; position:relative; }
+  .flow-step{ display:flex; gap:14px; position:relative; padding-bottom:22px; }
+  .flow-step:last-child{ padding-bottom:0; }
+  .flow-step .rail{ display:flex; flex-direction:column; align-items:center; flex:none; }
+  .flow-step .node{
+    width:32px; height:32px; border-radius:50%; background:var(--primary); color:#fff;
+    display:flex; align-items:center; justify-content:center; font-weight:900; font-size:13px;
+    font-family:"Zen Kaku Gothic New",sans-serif; flex:none; z-index:1;
+  }
+  .flow-step .stem{ width:2px; flex:1; background:var(--line); margin-top:2px; }
+  .flow-step .content{ flex:1; background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:14px 16px; box-shadow:var(--shadow); margin-top:1px;}
+  .flow-step .content h3{ font-size:14.5px; font-weight:700; }
+  .flow-step .content p{ font-size:13px; color:var(--ink-soft); margin-top:5px; }
+
+  .principles-foot{
+    margin-top:26px; padding:16px 18px; background:var(--primary-tint); border-radius:14px;
+    font-size:13px; color:var(--primary-strong); text-align:center; font-weight:700;
+  }
+
+  a{color:var(--primary);}
+  button:focus-visible, textarea:focus-visible, .case-card:focus-visible{
+    outline:2px solid var(--primary); outline-offset:2px;
+  }
+
+  @media (hover:hover){
+    .case-card:hover{ border-color:var(--primary); }
+    .principles-cta:hover{ background:var(--primary-tint); filter:brightness(0.97); }
+    .review-pill-btn:hover{ filter:brightness(0.95); }
+    .reveal-btn:hover{ filter:brightness(1.08); }
+    .assess-btn:hover{ border-color:var(--primary); }
+    .nav-btn.primary:hover{ filter:brightness(1.08); }
+    .nav-btn.ghost:hover{ border-color:var(--primary); }
+    .topbar .back:hover{ text-decoration:underline; }
+  }
+</style>
+</head>
+<body>
+
+<div id="app"></div>
+
+<script>
+(function(){
+  "use strict";
+
+  var CASES = [
+    {
+      id:"cap", num:1, tag:"呼吸器感染症",
+      hint:"82歳男性・独居・発熱と湿性咳嗽",
+      vignette:"82歳男性。独居でADLは自立しており、施設入所歴・長期臥床はない。基礎疾患は高血圧のみ。直近3か月以内の抗菌薬使用歴はない。3日前からの発熱、湿性咳嗽、労作時息切れが出現し改善なく救急受診した。",
+      data:"BP 104/62　HR 108　RR 26　SpO2 88%(room air)→酸素2L/分で95%　T 38.9℃　意識清明／BUN 24mg/dL　WBC 14200/μL　CRP 18.6mg/dL／胸部X線: 右下肺野に浸潤影",
+      questions:[
+        {
+          q:"A-DROPを用いてこの患者の重症度を評価せよ。外来/入院/ICUのどこで治療すべきか判断せよ。",
+          answer:[
+            "A-DROPの5項目を確認する: <mark>Age(男性70歳以上)該当</mark>、<mark>BUN 24mg/dL(21超)で該当</mark>、<mark>SpO2 88%(90%未満)で該当</mark>、意識障害なし(非該当)、収縮期血圧104mmHg(90未満でないため非該当)",
+            "該当項目は<mark>3項目=重症</mark>に分類される",
+            "重症(3項目該当)は入院治療が原則。<mark>4〜5項目該当やショックを伴う場合はICU入室を考慮</mark>する基準であり、本症例は3項目のため一般病棟入院の上で頻回のバイタル・呼吸状態の再評価を行う"
+          ],
+          mistakes:["発熱・咳嗽・浸潤影という古典的な所見だけで軽症/重症を判断し、A-DROPの各項目を実際に数えない","SpO2低値を「酸素投与で95%まで改善したから問題ない」と過小評価し、投与前の値で重症度評価をやり直さない"]
+        },
+        {
+          q:"想定される主要な起因菌とその推定根拠を述べよ。細菌性肺炎とマイコプラズマ肺炎はどう鑑別するか。",
+          answer:[
+            "市中肺炎の起因菌として頻度が高いのは<mark>肺炎球菌(Streptococcus pneumoniae)</mark>で、次いでHaemophilus influenzae、また非定型病原体としてMycoplasma pneumoniae、Chlamydia pneumoniae、Legionella属などが挙げられる",
+            "日本呼吸器学会のガイドラインでは、<mark>①60歳未満、②基礎疾患がない/軽微、③頑固な咳嗽、④胸部聴診上所見が乏しい、⑤喀痰がない/迅速診断で原因菌が証明されない、⑥末梢血白血球数10,000/μL未満</mark>の6項目のうち<mark>4項目以上該当でマイコプラズマ肺炎などの非定型病原体を、3項目以下なら細菌性肺炎を疑う</mark>という鑑別法を用いる",
+            "本症例は<mark>80歳代(60歳以上)、湿性咳嗽(非定型で典型的な頑固な乾性咳ではない)、区域性の浸潤影、WBC 14200/μL(10,000以上)</mark>であり、該当項目は少なく<mark>細菌性肺炎(肺炎球菌など)が示唆される</mark>",
+            "本症例は市中発症で医療曝露歴・直近の抗菌薬使用歴もなく、誤嚥のリスク因子(意識障害、嚥下障害の既往、口腔衛生不良など)も明記されていないため、<mark>誤嚥性肺炎に準じた嫌気性菌カバーが必須とまでは言えない</mark>"
+          ],
+          mistakes:["高齢というだけで反射的に誤嚥性肺炎と決めつけ、嚥下機能や誤嚥のエピソードを確認せずに嫌気性菌カバーを追加する","6項目のような鑑別の枠組みを使わず、雰囲気で「非定型っぽい/細菌性っぽい」と判断してしまう"]
+        },
+        {
+          q:"この患者(A-DROP重症、入院治療)のエンピリック抗菌薬を、用量・投与経路とともに述べよ。日本のガイドラインと海外(IDSA/ATS)のガイドラインで考え方はどう異なるか。",
+          answer:[
+            "日本呼吸器学会のガイドラインは、Q2の細菌性/マイコプラズマ鑑別で<mark>細菌性肺炎が示唆される場合はβ-ラクタム系単剤を基本</mark>とする(例: スルバクタム/アンピシリン(SBT/ABPC)3g 静注 6時間毎、またはセフトリアキソン(CTRX)1〜2g 静注 1日1回。より重症であればタゾバクタム/ピペラシリン(TAZ/PIPC)4.5g 静注 6〜8時間毎)",
+            "米国のATS/IDSA 2019ガイドラインは重症市中肺炎の入院患者に<mark>β-ラクタム+マクロライドの併用やニューキノロン単剤を比較的広く推奨</mark>するのに対し、<mark>日本のガイドラインは6項目の鑑別スコアやレジオネラ診断予測スコアなどを用いて非定型病原体を積極的に疑う所見がある場合にのみマクロライド系・テトラサイクリン系・ニューキノロン系を追加/選択する</mark>という考え方の違いがある(不要な広域化・多剤併用を避ける方針)",
+            "<mark>抗緑膿菌薬(タゾバクタム/ピペラシリンやカルバペネム系など)や抗MRSA薬(バンコマイシンなど)は、外来・一般病棟患者にはルーチンで使用せず、重症例・免疫不全例や、気管支拡張症などの構造的肺疾患・過去の当該菌検出歴といった明確なリスク因子がある場合にのみ検討する</mark>(2024年版で明記された方針)"
+          ],
+          mistakes:["海外のガイドラインをそのまま当てはめ、非定型病原体を積極的に疑う所見がないのに反射的にマクロライドを併用してしまう","「重症だから」というだけの理由で、リスク因子の評価なしに抗緑膿菌薬・抗MRSA薬を最初から追加してしまう(JRS2024が明記して戒めているオーバートリートメント)"]
+        },
+        {
+          q:"血液培養・喀痰培養から感受性良好な肺炎球菌が判明し、解熱・臨床的に改善している。どう変更するか(de-escalation)。治療期間の目安は?",
+          answer:[
+            "感受性が良好な肺炎球菌に感受性のある<mark>狭域のペニシリン系(アンピシリンやペニシリンGなど)にde-escalation</mark>する",
+            "治療期間は<mark>解熱後48〜72時間かつ臨床的に安定していることを確認した上で、最短5日間を目安</mark>とする(菌血症・膿胸などの合併症がなければ、漫然と7〜10日間続ける根拠はない)",
+            "膿胸・肺膿瘍などの合併症や、緩徐な改善を認める場合は治療期間の延長を検討する"
+          ],
+          mistakes:["感受性結果が判明しても開始時の抗菌薬(SBT/ABPCやCTRXなど)をそのまま最後まで継続し、de-escalationしない","「肺炎は7日間」のような固定観念で、臨床的安定度を確認せず機械的に期間だけを決めてしまう"]
+        },
+        {
+          q:"いつ上級医/感染症科に相談すべきか?",
+          answer:[
+            "治療開始後<mark>48〜72時間で解熱・症状改善が乏しい場合</mark>(抗菌薬の変更や他疾患の再評価が必要)",
+            "呼吸状態が悪化し<mark>酸素需要が増加、または人工呼吸管理が必要になった場合</mark>はICU/上級医へ速やかに相談する",
+            "膿胸・肺膿瘍などの合併症を疑う場合、活動性結核が否定できず抗結核薬を要する可能性がある場合も早期に相談する"
+          ],
+          mistakes:["48時間経過しても改善がないまま同じ抗菌薬を継続し、再評価・上級医相談のタイミングを逸する"]
+        }
+      ],
+      summary:{
+        points:[
+          "重症度評価はA-DROPの各項目を実際に数えて行う。古典的所見の印象だけで判断しない",
+          "日本のガイドラインは6項目の鑑別スコアなどで非定型病原体を積極的に疑う所見がある場合にのみマクロライド等を追加する方針で、海外(ATS/IDSA)の「重症例には広くβ-ラクタム+マクロライド併用」という考え方とは異なる",
+          "抗緑膿菌薬・抗MRSA薬は明確なリスク因子がない限りルーチンでは使用しない(JRS2024で明記)",
+          "肺炎球菌感受性良好なら狭域ペニシリン系へde-escalationし、臨床的安定を確認できれば最短5日間で終了を検討する",
+          "48〜72時間で改善が乏しい、または呼吸状態が悪化する場合は早期に上級医/感染症科へ相談する"
+        ],
+        refs:[
+          {authors:"日本呼吸器学会", title:"成人肺炎診療ガイドライン2024", source:"日本呼吸器学会", year:"2024", url:"https://www.jrs.or.jp/publication/jrs_guidelines/20240319125656.html"},
+          {authors:"Metlay JP, Waterer GW, Long AC, et al.", title:"Diagnosis and Treatment of Adults with Community-acquired Pneumonia: An Official Clinical Practice Guideline of the American Thoracic Society and Infectious Diseases Society of America", source:"American Journal of Respiratory and Critical Care Medicine 200(7):e45-e67", year:"2019", url:"https://doi.org/10.1164/rccm.201908-1581ST"}
+        ]
+      }
+    },
+    {
+      id:"pyelonephritis", num:2, tag:"尿路感染症",
+      hint:"68歳男性・前立腺肥大症の既往・発熱と側腹部痛",
+      vignette:"68歳男性。前立腺肥大症の既往があり内服治療中。2日前からの右側腹部痛と悪寒戦慄を伴う発熱が出現し受診した。排尿時痛・頻尿の自覚もある。直近の尿路処置歴やカテーテル留置はない。",
+      data:"BP 118/76　HR 96　RR 18　SpO2 98%(RA)　T 39.1℃　右CVA叩打痛あり／尿検査: 白血球反応強陽性、亜硝酸塩陽性　WBC 13800/μL　CRP 9.8mg/dL　Cr 1.1mg/dL(eGFR 62)",
+      questions:[
+        {
+          q:"このエピソードは単純性/複雑性のどちらの腎盂腎炎に分類されるか。その理由を述べよ。",
+          answer:[
+            "<mark>男性の発熱性尿路感染症は、それだけで複雑性尿路感染症として扱う</mark>のが原則",
+            "本症例はさらに前立腺肥大症という尿路の基礎疾患(通過障害のリスク)を伴っており、<mark>複雑性腎盂腎炎</mark>と判断する"
+          ],
+          mistakes:["男性の発熱性UTIを女性の単純性腎盂腎炎と同じ枠組みで捉え、尿路の基礎疾患評価(前立腺炎合併・尿路異常の検索)を省略する"]
+        },
+        {
+          q:"想定される起因菌は何か。培養結果が出るまでのエンピリック選択の考え方を述べよ。",
+          answer:[
+            "複雑性尿路感染症の主要起因菌は<mark>大腸菌(E. coli)を筆頭に、Klebsiella pneumoniae、Proteus mirabilis</mark>などの腸内細菌目細菌",
+            "培養結果が判明するまでは、<mark>直近の抗菌薬使用歴、医療曝露歴、過去の耐性菌(ESBL産生菌など)検出歴</mark>を必ず確認し、耐性リスクの有無で抗菌薬の広さを調整する"
+          ],
+          mistakes:["耐性リスク因子の有無を評価せず、リスクの高低にかかわらず一律に同じ抗菌薬を選んでしまう","患者本人・お薬手帳への抗菌薬使用歴の確認を省略する"]
+        },
+        {
+          q:"具体的なエンピリック抗菌薬を用量・投与経路とともに述べよ(敗血症の徴候はなく、耐性菌リスク因子もないと仮定する)。",
+          answer:[
+            "耐性リスクが高くなければ、<mark>セフトリアキソン1〜2g 静注 1日1回</mark>を第一選択の一つとする",
+            "ESBL産生菌などの耐性リスクが高い場合(施設入所、直近の広域抗菌薬使用、過去のESBL検出歴など)にのみ<mark>カルバペネム系(メロペネムなど)</mark>を考慮する。リスクがないのに最初から広域を選ぶ必要はない"
+          ],
+          mistakes:["耐性リスク因子がないにもかかわらず「念のため」とカルバペネムなど最初から広域抗菌薬を選択してしまう"]
+        },
+        {
+          q:"尿培養からESBL非産生の大腸菌(感受性良好)が判明した。入院・点滴治療を継続する前提で、どう変更するか(de-escalation)。経口薬へのスイッチはいつ検討すべきか。治療期間の目安は?",
+          answer:[
+            "de-escalationは「広域→狭域」の軸と「点滴→内服」の軸を分けて考える。<mark>まだ入院・点滴継続が前提の段階では、無理に経口フルオロキノロンへ切り替える必要はなく、まず点滴のまま狭域化することを優先</mark>する",
+            "具体的には、<mark>感受性結果でアンピシリン(ABPC)感受性があればアンピシリン、なければセファゾリン(CEZ)感受性を確認した上でセファゾリンへ切り替える</mark>のが狭域化の選択肢となる。ただし国内の大腸菌はアンピシリン・セファゾリンいずれにも一定の耐性率があるため、<mark>「ESBL非産生」というだけで自動的にABPC/CEZが効くと仮定せず、感受性結果で個別の薬剤(ABPCまたはCEZ)そのものが感受性かを必ず確認</mark>する",
+            "経口薬への切り替えは、<mark>解熱・症状改善が得られ退院が視野に入った時点</mark>で検討する(JAID/JSC感染症治療ガイドラインも解熱後24時間を目安としている)。この時点で初めてレボフロキサシンなどの経口フルオロキノロンが選択肢に入る",
+            "フルオロキノロンは腎盂腎炎に対する組織移行性・バイオアベイラビリティの良さから経口スイッチ薬として広く使われてきたが、<mark>厚生労働省の薬剤耐性(AMR)対策アクションプランはフルオロキノロン系薬を「第一選択となる感染症、または代替薬がない場合に限り使用する」よう求めており、まだ入院・点滴治療中で代替の狭域点滴薬が使える段階での安易な経口フルオロキノロンへの変更は、このAMR対策の趣旨にも合わない</mark>",
+            "治療期間の目安は、JAID/JSC感染症治療ガイドラインに準じると<mark>合計14日間</mark>。海外(IDSA/ESCMID)のデータでは感受性のあるフルオロキノロンなら7日間程度への短縮を支持する報告もあるが、これは経口フルオロキノロンでの短期投与の話であり、点滴継続中の狭域化とは別軸の議論である"
+          ],
+          mistakes:["感受性結果が判明しても広域静注薬(セフトリアキソンなど)を漫然と継続し、狭域化を検討しない","まだ入院・点滴治療の段階なのに、「感受性があるから」とだけ考えて反射的に経口フルオロキノロンへスイッチしてしまう(点滴のまま狭域化するという選択肢を検討しない)","「ESBL非産生」を「アンピシリン/セファゾリンが効く」と同義に扱い、個別の薬剤感受性結果を確認しない"]
+        },
+        {
+          q:"いつ上級医/感染症科・泌尿器科に相談すべきか?",
+          answer:[
+            "治療開始<mark>48〜72時間で解熱・症状改善が乏しい場合</mark>は、尿路閉塞や腎膿瘍形成の除外のため画像検査(腹部エコー・CTなど)を検討し、泌尿器科に相談する",
+            "ESBL産生菌や多剤耐性菌が検出された場合、前立腺炎合併が疑われる場合、再発を繰り返す場合も感染症科・泌尿器科へ相談する"
+          ],
+          mistakes:["解熱しないまま同じ抗菌薬を漫然と継続し、前立腺肥大症による閉塞性腎盂腎炎や膿瘍形成の評価が遅れる"]
+        }
+      ],
+      summary:{
+        points:[
+          "男性の発熱性尿路感染症は、それだけで複雑性尿路感染症として扱う",
+          "耐性リスク因子の評価(抗菌薬使用歴・医療曝露歴・過去の耐性菌検出歴)なしに広域抗菌薬を選ばない",
+          "de-escalationは「広域→狭域」と「点滴→内服」を別軸で考える。入院・点滴治療中はまず点滴のまま狭域化し、経口フルオロキノロンへの変更は退院が視野に入ってから検討する",
+          "治療期間はJAID/JSC感染症治療ガイドライン2015で合計14日間が目安",
+          "48〜72時間で解熱しない場合は尿路閉塞・膿瘍形成を疑い画像評価と泌尿器科相談を行う"
+        ],
+        refs:[
+          {authors:"一般社団法人日本感染症学会・公益社団法人日本化学療法学会", title:"JAID/JSC感染症治療ガイドライン2015 -尿路感染症・男性性器感染症-", source:"日本化学療法学会雑誌 64(1):1-30", year:"2016", url:"https://www.chemotherapy.or.jp/uploads/files/guideline/jaidjsc-kansenshochiryo_nyouro.pdf"},
+          {authors:"厚生労働省健康局結核感染症課", title:"薬剤耐性(AMR)対策アクションプラン(2023-2027)", source:"厚生労働省", year:"2023", url:"https://www.mhlw.go.jp/content/10900000/ap_honbun.pdf"}
+        ]
+      }
+    },
+    {
+      id:"cellulitis", num:3, tag:"皮膚軟部組織感染症",
+      hint:"55歳男性・2型糖尿病・左下腿の発赤腫脹",
+      vignette:"55歳男性。2型糖尿病(HbA1c 8.2%)の既往があり内服加療中。3日前からの左下腿の発赤・腫脹・熱感が急速に拡大し受診した。数日前に庭仕事中に同部位を擦りむいたエピソードがある。",
+      data:"BP 128/78　HR 92　RR 16　SpO2 98%(RA)　T 37.8℃／左下腿に境界やや不明瞭な発赤・腫脹・熱感、圧痛あり、皮膚の破綻部から少量の排膿を認める。波動は触知しない／WBC 11200/μL　CRP 6.2mg/dL",
+      questions:[
+        {
+          q:"この皮膚軟部組織感染症は化膿性(purulent)/非化膿性(non-purulent)のどちらに分類されるか。両者で起因菌の想定はどう異なるか。",
+          answer:[
+            "排膿を伴っており膿瘍形成を示唆する所見があるため、<mark>化膿性(purulent)SSTI</mark>に分類される",
+            "化膿性SSTIは<mark>黄色ブドウ球菌(MRSAを含む)</mark>が主体、非化膿性の蜂窩織炎は<mark>β溶血性連鎖球菌(A群溶連菌など)</mark>が主体と、想定する起因菌が異なる"
+          ],
+          mistakes:["発赤・腫脹があるというだけで一律に「蜂窩織炎=連鎖球菌」と決めつけ、排膿など化膿性所見の有無を確認しない"]
+        },
+        {
+          q:"MRSAのカバーが必要と判断される具体的な状況(リスク因子)を挙げよ。本症例はどれに該当するか。",
+          answer:[
+            "IDSA基準に基づくと、<mark>化膿性感染で中等症以上(全身性の炎症所見を伴う)、重症(SIRS/敗血症を伴う)、MRSA感染の既往やMRSA保菌が判明している、透析患者、注射薬物使用歴、最近の入院・医療曝露</mark>などがMRSAカバーを考慮する状況",
+            "本症例は排膿を伴う化膿性感染で発熱・WBC上昇を伴い<mark>中等症相当</mark>と判断できるため、MRSAカバーを考慮する対象になる"
+          ],
+          mistakes:["糖尿病があるという理由だけで自動的にMRSAカバーを追加してしまう(糖尿病自体はIDSA基準のMRSAカバー適応には含まれない)","化膿性所見があるのにMRSAのリスクを検討せず連鎖球菌のみをカバーする薬剤で治療してしまう"]
+        },
+        {
+          q:"具体的なエンピリック抗菌薬(培養検体を採取した上で)を用量とともに述べよ。糖尿病患者であることは選択にどう影響するか。",
+          answer:[
+            "排膿部からの培養検体を採取した上で、MRSAカバーを含む経験的治療として<mark>ST合剤(トリメトプリム/スルファメトキサゾール)</mark>や、中等症以上・入院が必要な場合は<mark>バンコマイシン15〜20mg/kg 静注 12時間毎(腎機能に応じて調整、TDMでトラフ値管理)</mark>などを選択する",
+            "<mark>糖尿病があること自体は抗菌薬の種類を変える根拠にはならない</mark>が、血糖コントロール不良は治癒遅延に影響しうるため血糖管理も並行して行う",
+            "急速な進行、所見に不釣り合いな激しい疼痛、皮膚色調変化、捻髪音などの<mark>壊死性軟部組織感染を示唆する所見がないか</mark>必ず確認する"
+          ],
+          mistakes:["糖尿病患者だからと最初から緑膿菌カバーなど不要に広域な抗菌薬を選択してしまう","壊死性軟部組織感染を示唆する所見(比較的軽度に見える皮膚所見に不釣り合いな激痛など)を確認せず、通常の蜂窩織炎として管理してしまう"]
+        },
+        {
+          q:"排膿部培養からMSSA(メチシリン感受性黄色ブドウ球菌)が判明した。どう変更するか(de-escalation)。治療期間の目安は?",
+          answer:[
+            "MRSAでないと判明すれば、<mark>セファゾリンやセファレキシン(経口)などのβ-ラクタム系</mark>にde-escalationする(MSSAに対してはβ-ラクタム系がバンコマイシン等より高い効果が期待できる)",
+            "治療期間の目安は<mark>5日間</mark>(臨床的改善が乏しければ延長を検討)"
+          ],
+          mistakes:["MSSAと判明してもバンコマイシンやST合剤を漫然と継続する","根拠なく10日以上の長期投与を機械的に続ける"]
+        },
+        {
+          q:"いつ上級医/感染症科に相談すべきか?",
+          answer:[
+            "治療開始後<mark>48時間で発赤範囲の拡大や全身状態の増悪</mark>を認める場合",
+            "壊死性軟部組織感染を疑う所見(不釣り合いな激痛、急速な進行、捻髪音)、<mark>膿瘍形成でドレナージが必要な場合</mark>、再発を繰り返す場合、免疫不全患者で非典型的な経過をたどる場合は速やかに相談する"
+          ],
+          mistakes:["発赤範囲をマーキングするなど客観的な指標で経過を追う習慣がなく、拡大傾向の判断が遅れる","壊死性軟部組織感染の初期像を見逃し、外科的評価の依頼が遅れる"]
+        }
+      ],
+      summary:{
+        points:[
+          "化膿性(排膿・膿瘍を伴う)か非化膿性かで想定する起因菌が異なる",
+          "MRSAカバーの適応はIDSA基準(中等症以上の化膿性感染、重症、MRSA既往、透析、薬物使用歴など)に基づいて判断し、糖尿病の有無だけでは決めない",
+          "壊死性軟部組織感染を示唆する所見(不釣り合いな激痛・急速進行・捻髪音)を常に除外する",
+          "MSSAと判明すればβ-ラクタム系へde-escalationし、5日間を目安に治療する"
+        ],
+        refs:[
+          {authors:"盛山吉弘, 岩本和真, 片桐正博, 結束怜子", title:"本邦での蜂窩織炎の起因菌，および適切な抗菌薬選択の検討", source:"感染症学雑誌 92(2):115-119", year:"2018", url:"https://doi.org/10.11150/kansenshogakuzasshi.92.115"},
+          {authors:"Stevens DL, Bisno AL, Chambers HF, et al.", title:"Practice Guidelines for the Diagnosis and Management of Skin and Soft Tissue Infections: 2014 Update by the Infectious Diseases Society of America", source:"Clinical Infectious Diseases 59(2):e10-e52", year:"2014", url:"https://academic.oup.com/cid/article/59/2/e10/2895845"}
+        ]
+      }
+    },
+    {
+      id:"cholangitis", num:4, tag:"腹腔内感染症",
+      hint:"74歳女性・総胆管結石の既往・発熱と黄疸",
+      vignette:"74歳女性。総胆管結石の既往があり経過観察中。前日からの右季肋部痛が出現し、当日は悪寒戦慄を伴う発熱と眼球結膜の黄染に気づき受診した。",
+      data:"BP 92/58　HR 118　RR 24　SpO2 95%(O2 2L)　T 39.4℃　意識やや混濁／T-Bil 4.8mg/dL　WBC 16800/μL　CRP 21.3mg/dL　血小板 9.2万/μL　Cr 1.6mg/dL(平常時0.7mg/dLから上昇)／腹部エコー: 総胆管拡張、総胆管内に結石陰影",
+      questions:[
+        {
+          q:"Tokyo Guidelines 2018(TG18)に基づき重症度を評価せよ。",
+          answer:[
+            "TG18の重症度分類では、<mark>循環障害・中枢神経障害・呼吸障害・腎障害・肝障害・血液凝固障害のいずれかの臓器障害を伴う場合はGrade III(重症)</mark>と判定する",
+            "本症例は<mark>意識障害(中枢神経障害)、血圧低下(循環障害)、Cr上昇(急性腎障害)、血小板減少(血液凝固障害)</mark>を認めており、<mark>Grade III(重症)</mark>に該当する"
+          ],
+          mistakes:["黄疸・発熱・腹痛の古典的3徴(Charcotの3徴)が揃っているかだけを確認し、臓器障害の有無を個別に評価せず重症度を過小評価する"]
+        },
+        {
+          q:"重症例における治療の優先順位と、抗菌薬投与のタイミングはどう考えるか。",
+          answer:[
+            "輸液・全身管理と並行して、<mark>血液培養・胆汁培養採取後、できるだけ早期(敗血症性ショックなら1時間以内が目安)に広域抗菌薬を開始</mark>する",
+            "同時に<mark>緊急の胆道ドレナージ(内視鏡的または経皮的)によるソースコントロール</mark>を行う。閉塞した胆道の感染源は抗菌薬だけでは制御できない"
+          ],
+          mistakes:["抗菌薬投与を優先するあまり、緊急ドレナージ(ソースコントロール)の手配・依頼が後回しになる","逆に「ドレナージが先」と考え、抗菌薬投与自体を待機してしまう"]
+        },
+        {
+          q:"想定される起因菌と、カバーすべき菌種を述べよ。エンピリック抗菌薬を用量とともに述べよ。",
+          answer:[
+            "胆道感染の主要起因菌は<mark>大腸菌・Klebsiella pneumoniaeなどの腸内細菌目細菌、Enterococcus属、嫌気性菌(Bacteroides fragilisなど)</mark>",
+            "重症(Grade III)の市中発症例では、<mark>ピペラシリン/タゾバクタム4.5g 静注 6〜8時間毎</mark>、または広域β-ラクタム(セフェピムなど)+<mark>メトロニダゾール(嫌気性菌カバー)</mark>の併用を選択する。耐性リスクが高い場合や重症例では<mark>カルバペネム系(メロペネムなど)</mark>を考慮する"
+          ],
+          mistakes:["セフェピムやセフトリアキソン単剤など、嫌気性菌カバーを含まないレジメンを選択してしまう(B. fragilisをカバーできない)","腎機能低下があるのに用量・投与間隔の調整を検討せず標準用量のまま投与する"]
+        },
+        {
+          q:"胆汁培養からESBL非産生の大腸菌が判明し、ドレナージ後に解熱・状態改善した。どう変更するか(de-escalation)。治療期間の目安は?",
+          answer:[
+            "感受性結果に基づき<mark>狭域抗菌薬(感受性があればアンピシリン/スルバクタムなど)</mark>にde-escalationする",
+            "治療期間の目安は、<mark>適切なソースコントロール(ドレナージ)が得られ感染源がコントロールされていれば4〜7日間程度</mark>で終了可能(従来考えられていたより短期間でよいことがTG18で明確化された)",
+            "ドレナージが不十分で感染源がコントロールされていない場合は抗菌薬投与を継続する。また<mark>EnterococcusやStreptococcusなどグラム陽性菌による菌血症を伴う場合は、感染性心内膜炎の併発を考慮し2週間以上の投与を検討する</mark>"
+          ],
+          mistakes:["ドレナージ後で感受性結果も判明しているのに、広域抗菌薬を漫然と2週間近く継続してしまう"]
+        },
+        {
+          q:"いつ上級医/消化器内科・感染症科に相談すべきか?",
+          answer:[
+            "<mark>Grade III(重症)と判断した時点</mark>、緊急ドレナージの適応判断が必要な時点で速やかに消化器内科/内視鏡医に相談する",
+            "輸液・抗菌薬投与を開始しても<mark>循環動態が安定しない場合はICU/上級医</mark>に相談する"
+          ],
+          mistakes:["重症度評価を行わずに一般病棟でドレナージを翌日以降に先送りしてしまう"]
+        }
+      ],
+      summary:{
+        points:[
+          "TG18の重症度分類は臓器障害の有無で判定する。Charcotの3徴が揃っているかだけでは重症度を評価できない",
+          "抗菌薬投与とソースコントロール(緊急ドレナージ)の両方を並行して速やかに進める",
+          "胆道感染では嫌気性菌カバー(メトロニダゾールなど)を忘れない",
+          "適切なドレナージが得られれば、TG18では治療期間4〜7日間程度への短縮が可能"
+        ],
+        refs:[
+          {authors:"急性胆管炎・胆嚢炎診療ガイドライン改訂出版委員会編", title:"急性胆管炎・胆嚢炎診療ガイドライン2018", source:"医学図書出版", year:"2018", url:"https://www.jshbps.jp/modules/publications/index.php?content_id=7"},
+          {authors:"渡邉学, 浅井浩司, 森山穂高, ほか", title:"急性胆管炎・胆嚢炎に対する抗菌薬治療", source:"胆道 35(5):713-721", year:"2021", url:"https://www.jstage.jst.go.jp/article/tando/35/5/35_713/_article/-char/ja"},
+          {authors:"Gomi H, Solomkin JS, Schlossberg D, et al.", title:"Tokyo Guidelines 2018: antimicrobial therapy for acute cholangitis and cholecystitis", source:"Journal of Hepato-Biliary-Pancreatic Sciences 25(1):3-16", year:"2018", url:"https://doi.org/10.1002/jhbp.518"}
+        ]
+      }
+    },
+    {
+      id:"allergy", num:5, tag:"薬剤アレルギー",
+      hint:"60歳女性・市中肺炎・幼少期のペニシリン反応歴",
+      vignette:"60歳女性。市中肺炎の診断で入院となった。問診で「昔ペニシリンを飲んで蕁麻疹が出た」との申告があった。詳細を確認すると、20年以上前、扁桃炎に対しアモキシシリンを内服した数分〜1時間程度で全身に蕁麻疹が出現し、同時に口唇の腫脹と息苦しさを自覚し救急受診したとのことであった。以後ペニシリン系は使用しておらず、セフェム系の使用歴は不明。",
+      data:"BP 132/80　HR 96　RR 20　SpO2 94%(RA)　T 38.4℃／WBC 13100/μL　CRP 14.2mg/dL／胸部X線: 左下肺野に浸潤影",
+      questions:[
+        {
+          q:"このアレルギー歴のうち、IgE依存性(即時型)アレルギーを示唆する所見はどれか。",
+          answer:[
+            "内服後<mark>数分〜1時間以内という発症までの時間の短さ</mark>(即時型反応の特徴)",
+            "<mark>全身性蕁麻疹、血管浮腫(口唇腫脹)、呼吸器症状(息苦しさ)</mark>はいずれもIgE依存性(I型)アレルギー、特にアナフィラキシーを示唆する所見"
+          ],
+          mistakes:["「昔ペニシリンでアレルギーが出た」という申告だけをカルテに記録し、症状の内容・発症までの時間・重症度を具体的に聴取しない"]
+        },
+        {
+          q:"このような即時型アレルギーの既往がある患者に、セファロスポリン系抗菌薬を使用してよいか。交差反応性についてどう考えるか。",
+          answer:[
+            "ペニシリン-セフェム間の交差反応は<mark>側鎖(R1 side chain)構造の類似性</mark>に強く依存する",
+            "側鎖が類似した薬剤同士(例: アモキシシリンとセファレキシン/セファドロキシルなど)は交差反応リスクが相対的に高い(報告により<mark>約16%程度</mark>)一方、側鎖が異なる薬剤同士(第3世代セフェムの多くなど)の交差反応は<mark>低い(全体では約2%程度)</mark>",
+            "本症例はアナフィラキシー既往があるが、<mark>側鎖の異なる第3世代セフェム(セフトリアキソンなど)であれば一般に安全に使用できる可能性が高い</mark>。初回投与は院内でモニタリング下に行うことが推奨され、可能であればアレルギー専門医への相談やスキンテストも検討する"
+          ],
+          mistakes:["「ペニシリンアレルギー」の申告があるだけで、セフェム系を含むβ-ラクタム系全てを一律に回避してしまう(不必要な回避はより広域・毒性の強い代替薬の使用につながりうる)","アナフィラキシー既往を軽視し、側鎖の類似性を確認しないままアモキシシリンと側鎖の似たセフェム系を安易に投与する"]
+        },
+        {
+          q:"β-ラクタム系を完全に回避する場合の代替薬選択肢を、本症例(市中肺炎)について具体的に述べよ。",
+          answer:[
+            "β-ラクタムを完全に回避する場合、<mark>呼吸器キノロン(レボフロキサシン500mg 1日1回など)単剤</mark>、または<mark>アズトレオナム+マクロライド</mark>の組み合わせなどを検討する",
+            "アズトレオナムは側鎖がセフタジジムと類似するため、その組み合わせでの交差反応には注意が必要だが、単純なペニシリンアレルギーでは通常交差反応なく使用できる"
+          ],
+          mistakes:["代替薬として本来の適応(グラム陽性菌カバー)とは異なるバンコマイシンを安易に選択し、肺炎球菌などのグラム陽性菌はある程度カバーできてもグラム陰性菌カバーが不十分なまま治療してしまう"]
+        },
+        {
+          q:"今後の診療のために、このアレルギー歴をどう記録し、患者にどう説明すべきか。",
+          answer:[
+            "カルテには<mark>申告された症状・発症までの時間・重症度(アナフィラキシーの有無)を具体的に記載</mark>し、「ペニシリンアレルギー」とだけ記載しない",
+            "可能であれば今後の受診に備え、<mark>アレルギー専門医でのペニシリン皮膚テストや経口チャレンジによる評価(de-labeling)</mark>を検討する選択肢があることを患者に説明する"
+          ],
+          mistakes:["「ペニシリンアレルギーあり」とだけ記載し詳細情報を残さないため、次回以降の医療者が改めて必要以上に広く回避せざるを得なくなる"]
+        },
+        {
+          q:"いつ上級医/感染症科・アレルギー科に相談すべきか?",
+          answer:[
+            "<mark>アナフィラキシーなど重篤な即時型反応の既往がある患者にβ-ラクタム系の使用を検討する場合</mark>、側鎖情報の評価に自信が持てない場合",
+            "複数系統の薬剤アレルギーがある場合、スキンテスト/チャレンジテストの適応を判断する場合は感染症科・アレルギー科に相談する"
+          ],
+          mistakes:["自己判断でアナフィラキシー既往患者に側鎖の類似した薬剤を投与してしまう"]
+        }
+      ],
+      summary:{
+        points:[
+          "アレルギー歴は「あり/なし」ではなく、症状・発症までの時間・重症度を具体的に聴取する",
+          "ペニシリン-セフェム交差反応は側鎖の類似性に依存し、側鎖が異なれば交差反応リスクは低い",
+          "重篤な即時型反応の既往がある場合は側鎖の異なる薬剤の選択・院内モニタリング下での初回投与・専門科相談を検討する",
+          "アレルギー歴を詳細に記録し、将来的なde-labeling評価の選択肢を患者に伝える"
+        ],
+        refs:[
+          {authors:"Shenoy ES, Macy E, Rowe T, Blumenthal KG.", title:"Evaluation and Management of Penicillin Allergy: A Review", source:"JAMA 321(2):188-199", year:"2019", url:"https://doi.org/10.1001/jama.2018.19283"}
+        ]
+      }
+    },
+    {
+      id:"neutropenia", num:6, tag:"発熱性好中球減少症",
+      hint:"58歳男性・急性骨髄性白血病の寛解導入療法後・発熱",
+      vignette:"58歳男性。急性骨髄性白血病の寛解導入化学療法後10日目。訪室時の体温測定で発熱を認めた。悪寒戦慄あり、明らかな感染巣を自覚する症状はない。",
+      data:"BP 98/60　HR 110　RR 20　SpO2 97%(RA)　T 38.6℃(単回測定)／好中球数 180/μL(化学療法前は正常範囲)　WBC 900/μL　CRP 4.1mg/dL　Cr 1.3mg/dL(平常時0.8mg/dLから上昇)／口腔粘膜炎あり、明らかな皮膚発赤・カテーテル刺入部異常なし",
+      questions:[
+        {
+          q:"発熱性好中球減少症(FN)の定義を述べよ。本症例はこれに該当するか。",
+          answer:[
+            "FNの定義は<mark>単回の体温38.3℃以上(または38.0℃以上が1時間以上持続)、かつ好中球数500/μL未満</mark>(または1000/μL未満で48時間以内に500/μL未満へ低下すると予測される場合を含む)",
+            "本症例は<mark>好中球180/μLで発熱を認めており、FNの定義を満たす</mark>"
+          ],
+          mistakes:["発熱の定義(単回38.3℃以上など)を曖昧にしか把握しておらず、微熱を「経過観察」としてしまう"]
+        },
+        {
+          q:"MASCCスコアなどを用いたリスク評価の考え方を述べよ。本症例は外来治療の対象となりうるか。",
+          answer:[
+            "MASCCスコア(症状の程度、低血圧の有無、COPDの有無、腫瘍の種類、脱水の有無、発症時の外来/入院、年齢などから算出)<mark>21点以上は低リスク</mark>とされ、経口抗菌薬による外来治療の候補となりうる",
+            "ただし<mark>急性白血病の寛解導入療法中や造血幹細胞移植後の患者は、深く長期の好中球減少が予測されるため、スコアに関わらず一般に外来治療の対象とはならず入院での経静脈的治療が原則</mark>",
+            "本症例はまさにこれに該当し、外来治療の対象ではない"
+          ],
+          mistakes:["MASCCスコアの点数のみで機械的に外来管理を決定し、血液腫瘍・寛解導入療法中という背景因子を考慮しない"]
+        },
+        {
+          q:"明らかな感染巣がはっきりしない状態での初期エンピリック抗菌薬を、用量とともに述べよ。腎機能(Cr上昇)はどう選択に影響するか。",
+          answer:[
+            "<mark>血液培養(可能なら末梢+ルート別に複数セット)採取後、速やかに(1時間以内を目標に)抗緑膿菌活性を持つβ-ラクタム単剤療法</mark>を開始する。代表例はセフェピム、ピペラシリン/タゾバクタム、メロペネムのいずれか",
+            "血行動態が不安定な場合はグラム陽性菌カバー(バンコマイシンなど)の追加や複数系統の併用を考慮する",
+            "腎機能低下(本症例はCr上昇)がある場合はいずれの薬剤も<mark>腎機能に応じた減量・投与間隔の調整</mark>が必要で、特に<mark>セフェピムは腎機能低下時に蓄積すると脳症・痙攣などの神経毒性をきたしうる</mark>ため注意する。具体的な調整幅は薬剤の添付文書・院内プロトコルおよび薬剤部に確認する"
+          ],
+          mistakes:["腎機能を評価・調整せず標準用量のまま継続し、セフェピムによる薬剤性脳症などの神経毒性を見逃す","感染巣がはっきりしないことへの不安から、初期からグラム陽性菌カバーや複数抗菌薬の併用を不要に行ってしまう"]
+        },
+        {
+          q:"血液培養・画像検査で明らかな感染巣・起炎菌が同定されないまま解熱し、好中球数も回復傾向にある。この場合の抗菌薬継続方針は?",
+          answer:[
+            "培養陰性のまま経過していても、<mark>臨床的に安定し解熱が得られていれば、好中球数の回復を待たずに広域抗菌薬を漫然と継続する必要はなく、de-escalationや治療終了を検討</mark>できる",
+            "施設や患者背景(血液腫瘍の種類、寛解導入療法中かどうかなど)により方針が異なるため、<mark>血液内科・感染症科と相談の上で終了時期を決定</mark>する"
+          ],
+          mistakes:["「好中球が回復するまでは抗菌薬を切れない」という思い込みで、解熱・安定後も広域抗菌薬を漫然と継続してしまう(不要な広域抗菌薬の長期使用は耐性菌選択やClostridioides difficile感染のリスクを高める)"]
+        },
+        {
+          q:"いつ上級医/感染症科・血液内科に相談すべきか?",
+          answer:[
+            "初期治療開始後<mark>48〜72時間で解熱が得られない場合</mark>(抗菌薬の変更や真菌感染の評価を検討)",
+            "血行動態が不安定化した場合、新たな感染巣(肺浸潤影、カテーテル関連血流感染を示唆する所見など)が出現した場合",
+            "腎機能や薬物相互作用で用量調整に迷う場合は、自己判断で継続せず血液内科・感染症科に速やかに相談する"
+          ],
+          mistakes:["解熱しないまま同じレジメンを漫然と継続し、真菌感染症など二次的な原因の検索(経験的抗真菌薬の追加を含む)が遅れる"]
+        }
+      ],
+      summary:{
+        points:[
+          "FNの定義(体温・好中球数の具体的な閾値)を正確に把握する",
+          "血液腫瘍・寛解導入療法中の患者はMASCCスコアに関わらず入院・経静脈的治療が原則",
+          "初期は抗緑膿菌活性を持つβ-ラクタム単剤が基本。腎機能に応じた用量調整とセフェピムの神経毒性に注意する",
+          "培養陰性でも臨床的に安定していれば、好中球回復を待たずにde-escalation・終了を検討できる",
+          "48〜72時間で改善が乏しい、または状態が悪化する場合は早期に血液内科・感染症科へ相談する"
+        ],
+        refs:[
+          {authors:"日本臨床腫瘍学会編", title:"発熱性好中球減少症(FN)診療ガイドライン 改訂第3版", source:"南江堂", year:"2024", url:"https://www.nankodo.co.jp/g/g9784524233762/"},
+          {authors:"Taplitz RA, Kennedy EB, Bow EJ, et al.", title:"Outpatient Management of Fever and Neutropenia in Adults Treated for Malignancy: American Society of Clinical Oncology and Infectious Diseases Society of America Clinical Practice Guideline Update", source:"Journal of Clinical Oncology 36(14):1443-1453", year:"2018", url:"https://doi.org/10.1200/JCO.2017.77.6211"}
+        ]
+      }
+    }
+  ];
+
+  var PRINCIPLES = [
+    {t:"感染臓器・重症度を推定する", d:"症状・身体所見・検査値から感染臓器を特定し、qSOFAやA-DROP、TG18のような臓器別の重症度分類を用いて外来/入院/ICUのどこで治療すべきかを判断する。"},
+    {t:"想定される起因菌を推定する", d:"感染臓器ごとに頻度の高い起因菌を想定する。市中発症か医療関連か、誤嚥・膿瘍形成・嫌気性菌カバーの要否など、菌種の推定根拠を言語化する。"},
+    {t:"患者背景を確認する", d:"アレルギー歴(症状・発症時間・重症度)、腎機能、免疫状態(好中球数・臓器移植・ステロイド使用など)、直近の抗菌薬使用歴・医療曝露歴・耐性菌検出歴を確認する。"},
+    {t:"エンピリック選択と投与量・投与経路を決定する", d:"想定起因菌・重症度・患者背景を踏まえ、必要十分な抗菌スペクトラムの薬剤を選び、用量・投与間隔・投与経路(腎機能による調整を含む)を具体的に決める。"},
+    {t:"de-escalationと治療期間を決定する", d:"培養結果が判明したら、感受性のある狭域抗菌薬へ変更できないか必ず検討する。治療期間はガイドラインの目安と臨床的安定度(解熱・症状改善)に基づいて決定し、漫然と継続しない。"}
+  ];
+
+  var STORE_KEY = "abx_progress_v1";
+  var DRAFT_KEY = "abx_drafts_v1";
+
+  function loadProgress(){
+    try{
+      var p = JSON.parse(localStorage.getItem(STORE_KEY));
+      return (p && typeof p === "object" && !Array.isArray(p)) ? p : {};
+    }catch(e){ return {}; }
+  }
+  function saveProgress(p){
+    try{ localStorage.setItem(STORE_KEY, JSON.stringify(p)); return true; }catch(e){ return false; }
+  }
+  function loadDrafts(){
+    try{
+      var d = JSON.parse(localStorage.getItem(DRAFT_KEY));
+      if(!d || typeof d !== "object" || Array.isArray(d)) return {};
+      var clean = {};
+      Object.keys(d).forEach(function(caseId){
+        var entry = d[caseId];
+        if(!entry || typeof entry !== "object" || Array.isArray(entry)) return;
+        var cleanEntry = {};
+        Object.keys(entry).forEach(function(k){
+          if(typeof entry[k] === "string") cleanEntry[k] = entry[k];
+        });
+        clean[caseId] = cleanEntry;
+      });
+      return clean;
+    }catch(e){ return {}; }
+  }
+  function saveDrafts(d){
+    try{ localStorage.setItem(DRAFT_KEY, JSON.stringify(d)); return true; }catch(e){ return false; }
+  }
+
+  (function validateCasesData(){
+    var seenIds = {}, seenNums = {}, ok = true;
+    CASES.forEach(function(c, i){
+      if(!c.id || !c.tag || !c.hint || !c.vignette || !c.data) ok = false;
+      if(seenIds[c.id]) ok = false;
+      seenIds[c.id] = true;
+      if(seenNums[c.num]) ok = false;
+      seenNums[c.num] = true;
+      if(c.num !== i+1) ok = false;
+      if(!c.questions || c.questions.length === 0) ok = false;
+      c.questions && c.questions.forEach(function(q){
+        if(!q.q) ok = false;
+        if(!q.answer || q.answer.length === 0) ok = false;
+        if(!q.mistakes) ok = false;
+      });
+      if(!c.summary || !c.summary.points || c.summary.points.length === 0) ok = false;
+      if(c.summary && c.summary.refs){
+        c.summary.refs.forEach(function(r){
+          if(!r.title) ok = false;
+          if(r.url && r.url.indexOf("http") !== 0) ok = false;
+        });
+      }
+    });
+    if(!ok && typeof console !== "undefined" && console.warn){
+      console.warn("[abx] CASES data integrity check failed: ids/nums are not unique/sequential, a case is missing a required field, a question has no text/answer, a case is missing summary points, or a reference is missing its title / has a malformed url.");
+    }
+  })();
+
+  var state = {
+    view:"home",          // home | case | principles
+    caseId:null,
+    reviewOnly:false,
+    progress: loadProgress()
+  };
+
+  var lastSaveFailed = false;
+
+  var app = document.getElementById("app");
+
+  function escapeHtml(s){
+    return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;");
+  }
+
+  var VALID_STATUSES = ["good","partial","poor"];
+  function safeStatus(s){
+    return VALID_STATUSES.indexOf(s) !== -1 ? s : "none";
+  }
+
+  function statusLabel(s){
+    if(s==="good") return "自力で言えた";
+    if(s==="partial") return "一部抜けた";
+    if(s==="poor") return "ほぼ言えなかった";
+    return "未挑戦";
+  }
+
+  function caseById(id){
+    for(var i=0;i<CASES.length;i++){ if(CASES[i].id===id) return CASES[i]; }
+    return null;
+  }
+
+  function completedCount(){
+    var n=0;
+    for(var i=0;i<CASES.length;i++){ if(safeStatus(state.progress[CASES[i].id]) !== "none") n++; }
+    return n;
+  }
+  function reviewCases(){
+    return CASES.filter(function(c){
+      var s = state.progress[c.id];
+      return s === "partial" || s === "poor";
+    });
+  }
+
+  function go(view, caseId){
+    state.view = view;
+    state.caseId = caseId || null;
+    render();
+    window.scrollTo(0,0);
+  }
+
+  /* ---------------- RENDER: HOME ---------------- */
+  function renderHome(){
+    var done = completedCount();
+    var total = CASES.length;
+    var rev = reviewCases();
+
+    var subLine;
+    if(done < total){
+      subLine = (total-done)+"症例が未挑戦";
+    } else if(rev.length){
+      subLine = "復習対象が "+rev.length+" 症例あります";
+    } else {
+      subLine = "全症例クリアです";
+    }
+
+    var html = "";
+    html += '<div class="hero">';
+    html += '  <div class="eyebrow">初期研修医のためのエンピリック抗菌薬選択</div>';
+    html += '  <h1>抗菌薬選択<br>トレーニング</h1>';
+    html += '  <p>暗記ではなく、判断プロセスの訓練です。答えを見る前に、各設問への自分の考えを書き出してみましょう。</p>';
+    html += '</div>';
+
+    html += '<div class="progress-card">';
+    html += '  <div class="progress-text"><div class="num">'+done+' / '+total+' 症例 挑戦済み</div><div class="sub">'+subLine+'</div></div>';
+    if(rev.length){
+      html += '  <button class="review-pill-btn" data-action="toggle-review">復習</button>';
+    }
+    html += '</div>';
+
+    html += '<button class="principles-cta" data-action="goto-principles"><span><span class="t">エンピリック抗菌薬選択の思考フレームワークを見る</span><span class="s">感染臓器・重症度→起因菌推定→患者背景→選択と用量→de-escalation</span></span><span class="arrow">›</span></button>';
+
+    if(state.reviewOnly){
+      html += '<div class="section-head"><h2>復習対象の症例</h2><span class="count">'+rev.length+'件</span></div>';
+      if(rev.length===0){
+        html += '<div class="empty-review">復習対象の症例はありません。<br>「一覧」から症例一覧を確認できます。</div>';
+      } else {
+        html += '<div class="case-grid">'+rev.map(caseCardHtml).join("")+'</div>';
+      }
+    } else {
+      html += '<div class="section-head"><h2>症例一覧</h2><span class="count">'+total+'症例</span></div>';
+      html += '<div class="case-grid">'+CASES.map(caseCardHtml).join("")+'</div>';
+    }
+
+    return html;
+  }
+
+  function caseCardHtml(c){
+    var status = safeStatus(state.progress[c.id]);
+    var numStr = (c.num<10?"0":"")+c.num;
+    return '<button class="case-card" data-action="open-case" data-id="'+c.id+'">'+
+      '<span class="case-num">'+numStr+'</span>'+
+      '<span class="case-body"><span class="tag">'+c.tag+'</span><span class="hint">'+c.hint+'</span></span>'+
+      '<span class="status-chip '+status+'">'+statusLabel(status)+'</span>'+
+    '</button>';
+  }
+
+  /* ---------------- RENDER: CASE ---------------- */
+  var revealCache = {}; // caseId -> bool (revealed) — session-only
+  var draftCache = loadDrafts(); // caseId -> {q0,q1,...} — persisted, debounced
+  var pendingStatus = {}; // caseId -> chosen status this session
+
+  function renderCase(c){
+    var html = "";
+    html += '<div class="case-hero"><div class="tag">症例 '+(c.num<10?"0":"")+c.num+'・'+c.tag+'</div><h1>'+c.hint+'</h1></div>';
+    html += '<div class="vignette">'+c.vignette+'<div class="vitals-line"><b>データ　</b>'+c.data+'</div></div>';
+
+    var revealed = !!revealCache[c.id];
+    var drafts = draftCache[c.id] || {};
+
+    html += '<div id="prompts">';
+    c.questions.forEach(function(qq, i){
+      var key = "q"+i;
+      var taId = "ta-"+c.id+"-"+i;
+      html += '<div class="prompt-block">';
+      html += '<label for="'+taId+'"><span class="n">Q'+(i+1)+'.</span>'+qq.q+'</label>';
+      if(!revealed){
+        html += '<textarea id="'+taId+'" data-field="'+key+'" placeholder="自分の考えを書いてみましょう…">'+ (drafts[key] ? escapeHtml(drafts[key]) : "") +'</textarea>';
+      }
+      html += '</div>';
+      if(revealed){
+        html += answerCard(i+1, qq);
+      }
+    });
+    html += '</div>';
+
+    if(draftSaveFailed){
+      html += '<div class="save-warning">⚠ この端末には保存できませんでした。プライベートブラウズ中か、ストレージが無効になっている可能性があります。書いた内容はこの画面を離れると失われます。</div>';
+    }
+
+    if(!revealed){
+      html += '<button class="reveal-btn" data-action="reveal">模範解答を見る</button>';
+    } else {
+      html += renderAnswer(c);
+    }
+
+    return html;
+  }
+
+  function renderAnswer(c){
+    var html = '<div class="answer-wrap">';
+    html += summaryCard(c.summary);
+    html += '</div>';
+
+    html += '<div class="assess-block">';
+    html += '<div class="q">自分の答えと照らし合わせて、自己評価しましょう</div>';
+    var cur = pendingStatus[c.id] || state.progress[c.id] || "";
+    html += '<div class="assess-row">';
+    html += assessBtn("good","自力で言えた", cur);
+    html += assessBtn("partial","一部抜けた", cur);
+    html += assessBtn("poor","ほぼ言えなかった", cur);
+    html += '</div>';
+    if(cur && lastSaveFailed){
+      html += '<div class="save-warning">⚠ この端末には保存できませんでした。プライベートブラウズ中か、ストレージが無効になっている可能性があります。この記録はこの画面を離れると失われます。</div>';
+    }
+    html += '</div>';
+
+    if(cur){
+      html += '<div class="after-assess">';
+      html += '<button class="nav-btn primary" data-action="next-case">次の症例へ</button>';
+      html += '<button class="nav-btn ghost" data-action="goto-home">一覧に戻る</button>';
+      html += '</div>';
+    }
+
+    return html;
+  }
+
+  function answerCard(n, qq){
+    var html = '<div class="answer-card"><h3><span class="ico check">'+n+'</span>設問'+n+'の考え方</h3>';
+    html += '<ul>'+qq.answer.map(function(t){return '<li>'+t+'</li>';}).join("")+'</ul>';
+    if(qq.mistakes && qq.mistakes.length){
+      html += '<div class="mistake-box"><b>よくある誤答</b><ul>'+qq.mistakes.map(function(t){return '<li>'+t+'</li>';}).join("")+'</ul></div>';
+    }
+    html += '</div>';
+    return html;
+  }
+
+  function summaryCard(summary){
+    var html = '<div class="answer-card"><h3><span class="ico sum">✓</span>症例のまとめ</h3>';
+    html += '<ul>'+summary.points.map(function(t){return '<li>'+t+'</li>';}).join("")+'</ul>';
+    if(summary.refs && summary.refs.length){
+      html += '<div class="refs-box"><b>参考文献</b><ol>'+summary.refs.map(refItemHtml).join("")+'</ol></div>';
+    }
+    html += '</div>';
+    return html;
+  }
+
+  function refItemHtml(ref){
+    var cite = ref.authors ? (ref.authors + '. ') : "";
+    cite += ref.title + '.';
+    if(ref.source || ref.year){
+      cite += ' <span class="ref-source">' + [ref.source, ref.year].filter(Boolean).join(', ') + '.</span>';
+    }
+    var link = ref.url ? ' <a href="'+ref.url+'" target="_blank" rel="noopener noreferrer">'+ref.url+'</a>' : "";
+    return '<li>' + cite + link + '</li>';
+  }
+
+  function assessBtn(kind, label, cur){
+    return '<button class="assess-btn '+kind+(cur===kind?' active':'')+'" data-action="assess" data-kind="'+kind+'">'+label+'</button>';
+  }
+
+  /* ---------------- RENDER: PRINCIPLES ---------------- */
+  function renderPrinciples(){
+    var html = "";
+    html += '<div class="principles-hero"><div class="eyebrow">エンピリック抗菌薬選択の思考フレームワーク</div><h1>どの症例でも、まずこの順番で考える</h1><p>個々の薬剤名を覚えるより先に、この5ステップを体に染み込ませましょう。</p></div>';
+    html += '<div class="escalation-note"><div class="en-label">⚡ 判断に迷ったら</div><div class="en-body">次のような場面では<mark>自己判断で選択・継続を決めず</mark>、早めに上級医/感染症科へ相談してください。<ul>'+
+      '<li>重症度評価やソースコントロールの必要性・タイミングに迷うとき</li>'+
+      '<li>アレルギー歴の解釈(側鎖の類似性など)に自信が持てないとき</li>'+
+      '<li>腎機能・肝機能に応じた用量調整に自信が持てないとき</li>'+
+      '<li>治療開始48〜72時間で反応が乏しい、または状態が悪化するとき</li>'+
+      '<li>耐性菌(ESBL産生菌・MRSAなど)が検出されたとき</li>'+
+      '</ul></div></div>';
+    html += '<div class="flow">';
+    PRINCIPLES.forEach(function(f,i){
+      html += '<div class="flow-step">';
+      html += '<div class="rail"><div class="node">'+(i+1)+'</div>'+(i<PRINCIPLES.length-1?'<div class="stem"></div>':'')+'</div>';
+      html += '<div class="content"><h3>'+f.t+'</h3><p>'+f.d+'</p></div>';
+      html += '</div>';
+    });
+    html += '</div>';
+    html += '<div class="principles-foot">迷ったら、この5つに立ち返る。</div>';
+    return html;
+  }
+
+  /* ---------------- MASTER RENDER ---------------- */
+  function render(){
+    var topbarHtml, mainHtml;
+
+    if(state.view==="home"){
+      topbarHtml = state.reviewOnly
+        ? '<button class="back" data-action="goto-home-full">‹ 一覧</button><div class="title">復習リスト</div>'
+        : '<div class="title">抗菌薬選択トレーニング</div>';
+      mainHtml = renderHome();
+    } else if(state.view==="case"){
+      var c = caseById(state.caseId);
+      if(!c){
+        state.view = "home";
+        state.caseId = null;
+        return render();
+      }
+      var numStr = (c.num<10?"0":"")+c.num;
+      topbarHtml = '<button class="back" data-action="goto-home">‹ 一覧</button><div class="title">症例 '+numStr+'</div>';
+      mainHtml = renderCase(c);
+    } else if(state.view==="principles"){
+      topbarHtml = '<button class="back" data-action="goto-home">‹ 一覧</button><div class="title">抗菌薬選択の思考フレームワーク</div>';
+      mainHtml = renderPrinciples();
+    }
+
+    app.innerHTML = '<div class="topbar">'+topbarHtml+'</div><main>'+mainHtml+'</main>';
+    bindEvents();
+  }
+
+  /* ---------------- EVENTS ---------------- */
+  function nextCaseAfter(current){
+    var pool = state.reviewOnly ? reviewCases() : CASES;
+    if(pool.length === 0){ pool = CASES; }
+    var idx = -1;
+    for(var i=0;i<pool.length;i++){ if(pool[i].id===current.id){ idx = i; break; } }
+    return idx === -1 ? pool[0] : pool[(idx+1) % pool.length];
+  }
+
+  function bindEvents(){
+    app.querySelectorAll("[data-action]").forEach(function(el){
+      el.addEventListener("click", function(){
+        var action = el.getAttribute("data-action");
+        if(action==="open-case"){
+          revealCache[el.getAttribute("data-id")] = false;
+          delete pendingStatus[el.getAttribute("data-id")];
+          lastSaveFailed = false;
+          draftSaveFailed = false;
+          go("case", el.getAttribute("data-id"));
+        } else if(action==="goto-home"){
+          go("home");
+        } else if(action==="goto-home-full"){
+          state.reviewOnly = false;
+          render();
+        } else if(action==="toggle-review"){
+          state.reviewOnly = true;
+          render();
+        } else if(action==="goto-principles"){
+          go("principles");
+        } else if(action==="reveal"){
+          collectDraft(state.caseId, true);
+          revealCache[state.caseId] = true;
+          render();
+          var firstAnswer = app.querySelector(".answer-card");
+          if(firstAnswer) firstAnswer.scrollIntoView({behavior:"smooth", block:"start"});
+        } else if(action==="assess"){
+          var kind = el.getAttribute("data-kind");
+          var c0 = caseById(state.caseId);
+          if(!c0) return;
+          pendingStatus[state.caseId] = kind;
+          state.progress[state.caseId] = kind;
+          lastSaveFailed = !saveProgress(state.progress);
+          render();
+        } else if(action==="next-case"){
+          var c = caseById(state.caseId);
+          if(!c) return;
+          var next = nextCaseAfter(c);
+          revealCache[next.id] = false;
+          delete pendingStatus[next.id];
+          go("case", next.id);
+        }
+      });
+    });
+
+    app.querySelectorAll("textarea[data-field]").forEach(function(ta){
+      ta.addEventListener("input", function(){
+        collectDraft(state.caseId, false);
+      });
+    });
+  }
+
+  var draftSaveTimer = null;
+  var draftSaveFailed = false;
+
+  function persistDrafts(){
+    var onDisk = loadDrafts();
+    var merged = {};
+    Object.keys(onDisk).forEach(function(id){ merged[id] = onDisk[id]; });
+    Object.keys(draftCache).forEach(function(id){ merged[id] = draftCache[id]; });
+    draftSaveFailed = !saveDrafts(merged);
+    return merged;
+  }
+
+  function collectDraft(caseId, flushNow){
+    var d = {};
+    app.querySelectorAll("textarea[data-field]").forEach(function(ta){
+      d[ta.getAttribute("data-field")] = ta.value;
+    });
+    draftCache[caseId] = d;
+    if(draftSaveTimer){ clearTimeout(draftSaveTimer); draftSaveTimer = null; }
+    if(flushNow){
+      persistDrafts();
+    } else {
+      draftSaveTimer = setTimeout(persistDrafts, 400);
+    }
+  }
+  window.addEventListener("pagehide", persistDrafts);
+  document.addEventListener("visibilitychange", function(){
+    if(document.visibilityState === "hidden") persistDrafts();
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>
