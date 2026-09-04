@@ -342,6 +342,14 @@
     background:repeating-linear-gradient(45deg, var(--primary), var(--primary) 2px, var(--surface) 2px, var(--surface) 5px);
     border-color:var(--primary);
   }
+  .sp-tabs{ display:flex; flex-wrap:wrap; gap:6px; margin:4px 0 0; }
+  .sp-tab{
+    appearance:none; border:1px solid var(--line); background:var(--surface); color:var(--ink-soft);
+    font-size:12.5px; font-weight:600; font-family:inherit; padding:9px 13px; border-radius:999px;
+    cursor:pointer; min-height:38px; transition:background .12s ease, color .12s ease, border-color .12s ease;
+  }
+  .sp-tab.active{ background:var(--primary); border-color:var(--primary); color:#fff; }
+  .sp-tab-hint{ font-size:11.5px; color:var(--ink-faint); margin:8px 2px 0; line-height:1.5; }
   .sp-scroll{
     overflow-x:auto; -webkit-overflow-scrolling:touch; margin-top:8px;
     border:1px solid var(--line); border-radius:14px; background:var(--surface);
@@ -350,10 +358,13 @@
   .sp-table th, .sp-table td{ border:1px solid var(--line); padding:6px 8px; }
   .sp-corner{
     position:sticky; left:0; z-index:3; background:var(--surface-2);
-    text-align:left; font-size:11px; color:var(--ink-faint); min-width:150px;
+    text-align:left; font-size:11px; color:var(--ink-faint); width:118px; max-width:118px;
   }
   .sp-group-head{ background:var(--primary-tint); color:var(--primary-strong); font-weight:700; text-align:center; }
-  .sp-col-head{ background:var(--surface-2); color:var(--ink-soft); font-weight:600; text-align:center; }
+  .sp-col-head{
+    background:var(--surface-2); color:var(--ink-soft); font-weight:600; text-align:center;
+    white-space:normal; max-width:70px; line-height:1.3;
+  }
   .sp-cls-row td{
     background:var(--accent-tint); color:var(--accent); font-weight:700;
     font-size:11px; padding:5px 8px; border-left:none; border-right:none;
@@ -361,6 +372,7 @@
   .sp-drug-head{
     position:sticky; left:0; z-index:2; background:var(--surface); text-align:left; font-weight:600;
     color:var(--ink); box-shadow:1px 0 0 var(--line);
+    white-space:normal; max-width:118px; line-height:1.35;
   }
   .sp-cell{ text-align:center; min-width:34px; }
   .sp-bar{ display:inline-block; width:100%; height:14px; border-radius:4px; }
@@ -1261,9 +1273,10 @@
   })();
 
   var state = {
-    view:"home",          // home | case | principles
+    view:"home",          // home | case | principles | spectrum
     caseId:null,
     reviewOnly:false,
+    spectrumGroup:"all",  // all | index into SPECTRUM_GROUPS
     progress: loadProgress()
   };
 
@@ -1524,27 +1537,38 @@
       '<span class="sp-legend-item"><span class="sp-swatch sp-partial"></span>条件付き/菌種・感受性による</span>'+
       '<span class="sp-legend-item"><span class="sp-swatch"></span>経験的カバーとして扱わない</span>'+
       '</div>';
+
+    html += '<div class="sp-tabs">';
+    html += '<button class="sp-tab'+(state.spectrumGroup==="all"?' active':'')+'" data-action="filter-spectrum" data-group="all">すべて</button>';
+    SPECTRUM_GROUPS.forEach(function(grp,gi){
+      html += '<button class="sp-tab'+(state.spectrumGroup===String(gi)?' active':'')+'" data-action="filter-spectrum" data-group="'+gi+'">'+grp.g+'</button>';
+    });
+    html += '</div>';
+    if(state.spectrumGroup!=="all"){
+      html += '<div class="sp-tab-hint">スマホでは列を絞ると横スクロールなしで見やすくなります。「すべて」で全体像に戻れます。</div>';
+    }
+
+    var groups = state.spectrumGroup==="all" ? SPECTRUM_GROUPS : [SPECTRUM_GROUPS[+state.spectrumGroup]];
+    var totalCols = 1;
+    groups.forEach(function(grp){ totalCols += grp.cols.length; });
+
     html += '<div class="sp-scroll"><table class="sp-table"><thead>';
     html += '<tr class="sp-group-row"><th class="sp-corner" rowspan="2">分類 / 薬剤</th>';
-    SPECTRUM_GROUPS.forEach(function(grp){ html += '<th class="sp-group-head" colspan="'+grp.cols.length+'">'+grp.g+'</th>'; });
+    groups.forEach(function(grp){ html += '<th class="sp-group-head" colspan="'+grp.cols.length+'">'+grp.g+'</th>'; });
     html += '</tr><tr>';
-    SPECTRUM_GROUPS.forEach(function(grp){ grp.cols.forEach(function(col){ html += '<th class="sp-col-head">'+col.l+'</th>'; }); });
+    groups.forEach(function(grp){ grp.cols.forEach(function(col){ html += '<th class="sp-col-head">'+col.l+'</th>'; }); });
     html += '</tr></thead><tbody>';
     var lastCls = null;
     SPECTRUM_DRUGS.forEach(function(d){
       if(d.cls !== lastCls){
-        var totalCols = 1;
-        SPECTRUM_GROUPS.forEach(function(grp){ totalCols += grp.cols.length; });
         html += '<tr class="sp-cls-row"><td colspan="'+totalCols+'">'+d.cls+'</td></tr>';
         lastCls = d.cls;
       }
       html += '<tr><th class="sp-drug-head">'+d.name+'</th>';
-      SPECTRUM_GROUPS.forEach(function(grp){ grp.cols.forEach(function(col){ html += spectrumCellHtml((d.cov||{})[col.k]); }); });
+      groups.forEach(function(grp){ grp.cols.forEach(function(col){ html += spectrumCellHtml((d.cov||{})[col.k]); }); });
       html += '</tr>';
       if(d.note){
-        var totalCols2 = 1;
-        SPECTRUM_GROUPS.forEach(function(grp){ totalCols2 += grp.cols.length; });
-        html += '<tr class="sp-note-row"><td colspan="'+totalCols2+'">'+d.note+'</td></tr>';
+        html += '<tr class="sp-note-row"><td colspan="'+totalCols+'">'+d.note+'</td></tr>';
       }
     });
     html += '</tbody></table></div>';
@@ -1615,6 +1639,9 @@
           go("principles");
         } else if(action==="goto-spectrum"){
           go("spectrum");
+        } else if(action==="filter-spectrum"){
+          state.spectrumGroup = el.getAttribute("data-group");
+          render();
         } else if(action==="reveal"){
           collectDraft(state.caseId, true);
           revealCache[state.caseId] = true;
