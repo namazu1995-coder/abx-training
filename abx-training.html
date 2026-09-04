@@ -330,6 +330,47 @@
     font-size:13px; color:var(--primary-strong); text-align:center; font-weight:700;
   }
 
+  /* --- spectrum table --- */
+  .sp-legend{ display:flex; flex-wrap:wrap; gap:14px; margin:14px 0; }
+  .sp-legend-item{ display:inline-flex; align-items:center; gap:6px; font-size:12px; color:var(--ink-faint); }
+  .sp-swatch{ width:16px; height:12px; border-radius:3px; border:1px solid var(--line); flex:none; }
+  .sp-swatch.sp-full{ background:var(--primary); border-color:var(--primary); }
+  .sp-swatch.sp-partial{
+    background:repeating-linear-gradient(45deg, var(--primary), var(--primary) 2px, var(--surface) 2px, var(--surface) 5px);
+    border-color:var(--primary);
+  }
+  .sp-scroll{
+    overflow-x:auto; -webkit-overflow-scrolling:touch; margin-top:8px;
+    border:1px solid var(--line); border-radius:14px; background:var(--surface);
+  }
+  .sp-table{ border-collapse:collapse; font-size:11.5px; white-space:nowrap; }
+  .sp-table th, .sp-table td{ border:1px solid var(--line); padding:6px 8px; }
+  .sp-corner{
+    position:sticky; left:0; z-index:3; background:var(--surface-2);
+    text-align:left; font-size:11px; color:var(--ink-faint); min-width:150px;
+  }
+  .sp-group-head{ background:var(--primary-tint); color:var(--primary-strong); font-weight:700; text-align:center; }
+  .sp-col-head{ background:var(--surface-2); color:var(--ink-soft); font-weight:600; text-align:center; }
+  .sp-cls-row td{
+    background:var(--accent-tint); color:var(--accent); font-weight:700;
+    font-size:11px; padding:5px 8px; border-left:none; border-right:none;
+  }
+  .sp-drug-head{
+    position:sticky; left:0; z-index:2; background:var(--surface); text-align:left; font-weight:600;
+    color:var(--ink); box-shadow:1px 0 0 var(--line);
+  }
+  .sp-cell{ text-align:center; min-width:34px; }
+  .sp-bar{ display:inline-block; width:100%; height:14px; border-radius:4px; }
+  .sp-cell.sp-full .sp-bar{ background:var(--primary); }
+  .sp-cell.sp-partial .sp-bar{
+    background:repeating-linear-gradient(45deg, var(--primary), var(--primary) 2px, transparent 2px, transparent 5px);
+    border:1px solid var(--primary);
+  }
+  .sp-note-row td{
+    position:static; background:var(--surface-2); color:var(--ink-faint); font-size:11px;
+    font-weight:400; white-space:normal; padding:6px 10px;
+  }
+
   a{color:var(--primary);}
   button:focus-visible, textarea:focus-visible, .case-card:focus-visible{
     outline:2px solid var(--primary); outline-offset:2px;
@@ -1108,6 +1149,53 @@
     {t:"MRSA保菌(感染ではない)", d:"鼻腔・皮膚の保菌のみでは全身治療の対象にならない。感染徴候の有無を必ず確認する。"}
   ];
 
+  /* 主要抗菌薬スペクトラム早見表: cov値 f=一般的な活性(濃色バー) p=条件付き/菌種による(斜線バー) 無指定=空欄(経験的カバーとして扱わない) */
+  var SPECTRUM_GROUPS = [
+    {g:"グラム陽性球菌(GPC)", cols:[
+      {k:"mrsa", l:"MRSA"},
+      {k:"mrcns", l:"MRCNS"},
+      {k:"ent", l:"腸球菌"},
+      {k:"mssa", l:"MSSA"},
+      {k:"strep", l:"連鎖球菌/肺炎球菌"}
+    ]},
+    {g:"グラム陰性桿菌(GNR)", cols:[
+      {k:"pek", l:"PEK"},
+      {k:"ham", l:"HaM"},
+      {k:"esc", l:"ESC(菌種差あり)"},
+      {k:"pseudo", l:"緑膿菌"},
+      {k:"esbl", l:"ESBL産生菌"},
+      {k:"ampc", l:"AmpC産生菌"}
+    ]},
+    {g:"その他", cols:[
+      {k:"anaerobe", l:"嫌気性菌"},
+      {k:"intracellular", l:"細胞内寄生菌"}
+    ]}
+  ];
+
+  var SPECTRUM_DRUGS = [
+    {cls:"ペニシリン", name:"ABPC(ビクシリン)", cov:{ent:"f",strep:"f"}},
+    {cls:"ペニシリン", name:"AMPC(アモキシシリン)", cov:{ent:"f",strep:"f",pek:"p"}, note:"感受性が確認された場合の選択肢。国内大腸菌の耐性率は高く、経験的な信頼性は低い"},
+    {cls:"ペニシリン", name:"ABPC/SBT(ユナシン)", cov:{ent:"f",mssa:"f",strep:"f",pek:"f",ham:"f",anaerobe:"f"}, note:"AmpCリスク菌は対象外"},
+    {cls:"ペニシリン", name:"AMPC/CVA(オーグメンチン)", cov:{ent:"f",mssa:"f",strep:"f",pek:"f",ham:"f",anaerobe:"f"}, note:"AmpCリスク菌は対象外"},
+    {cls:"ペニシリン", name:"PIPC/TAZ(タゾピペ)", cov:{ent:"f",mssa:"f",strep:"f",pek:"f",ham:"f",esc:"f",pseudo:"f",anaerobe:"f"}},
+    {cls:"セフェム(①第1世代)", name:"①CEZ(セファゾリン)", cov:{mssa:"f",strep:"f"}},
+    {cls:"セフェム(①第1世代)", name:"①CEX(セファレキシン)", cov:{mssa:"f",strep:"f"}},
+    {cls:"セフェム(②セファマイシン系)", name:"②CMZ(セフメタゾール)", cov:{pek:"f",ham:"p",esc:"p",esbl:"p",anaerobe:"f"}, note:"ESBL産生大腸菌にもcarbapenem-sparingの選択肢になりうる(重症例・感受性未確認例は優先しない)"},
+    {cls:"セフェム(③第3世代)", name:"③CTRX(セフトリアキソン)", cov:{mssa:"f",strep:"f",pek:"f",ham:"f",esc:"p"}, note:"AmpC高リスク菌の侵襲性感染には原則不推奨"},
+    {cls:"セフェム(③第3世代)", name:"③CTX(セフォタキシム)", cov:{mssa:"f",strep:"f",pek:"f",ham:"f",esc:"p"}, note:"AmpC高リスク菌の侵襲性感染には原則不推奨"},
+    {cls:"セフェム(③第3世代)", name:"③CAZ(セフタジジム)", cov:{pek:"f",ham:"p",esc:"f",pseudo:"f"}, note:"グラム陽性球菌のカバーは乏しい。BLNARのインフルエンザ菌にはCTRX/CTXの方が信頼できる"},
+    {cls:"セフェム(④第4世代)", name:"④CFPM(セフェピム)", cov:{mssa:"f",strep:"f",pek:"f",ham:"f",esc:"f",pseudo:"f",esbl:"p"}},
+    {cls:"カルバペネム", name:"MEPM(メロペネム)", cov:{ent:"p",mssa:"f",strep:"f",pek:"f",ham:"f",esc:"f",pseudo:"f",esbl:"f",ampc:"f",anaerobe:"f"}, note:"腸球菌はE. faecalisの一部のみ(要AST)。E. faeciumは対象外"},
+    {cls:"アミノグリコシド", name:"GM/AMK(ゲンタマイシン/アミカシン)", cov:{pek:"f",ham:"f",esc:"f",pseudo:"f"}, note:"相乗目的の併用は主にGM(一部の腸球菌・レンサ球菌IE)。ブドウ球菌NVEにroutineで併用しない"},
+    {cls:"マクロライド", name:"AZM(ジスロマック)", cov:{intracellular:"f"}, note:"嫌気性菌カバーとして扱わない"},
+    {cls:"リンコマイシン", name:"CLDM(クリンダマイシン)", cov:{mssa:"f",strep:"f",anaerobe:"p"}, note:"B. fragilis群の耐性に注意。腹腔内感染の経験的単剤は避ける"},
+    {cls:"テトラサイクリン", name:"MINO/DOXY(ミノマイシン/ビブラマイシン)", cov:{mrsa:"p",mssa:"f",strep:"f",intracellular:"f"}, note:"感受性確認した軽症化膿性SSTIの経口選択肢。菌血症・重症例には用いない"},
+    {cls:"ST合剤", name:"ST(バクタ、ダイフェン)", cov:{mrsa:"p",mssa:"f",pek:"f",ham:"f",esc:"f",esbl:"p",ampc:"p"}, note:"β溶血性レンサ球菌に対する活性は不安定なため、レンサ球菌のカバーとしては当てにしない"},
+    {cls:"ニューキノロン", name:"LVFX(レボフロキサシン)", cov:{pek:"f",ham:"f",esc:"f",pseudo:"f",intracellular:"f"}, note:"嫌気性菌目的には用いない(モキシフロキサシンとは異なる)"},
+    {cls:"ニトロイミダゾール", name:"MNZ(メトロニダゾール)", cov:{anaerobe:"f"}},
+    {cls:"グリコペプチド", name:"VCM(バンコマイシン)", cov:{mrsa:"f",mrcns:"f",ent:"f",mssa:"f",strep:"f"}, note:"アンピシリン耐性でもVCM感性なら選択肢。VREには無効"}
+  ];
+
   var STORE_KEY = "abx_progress_v1";
   var DRAFT_KEY = "abx_drafts_v1";
 
@@ -1250,6 +1338,7 @@
     html += '</div>';
 
     html += '<button class="principles-cta" data-action="goto-principles"><span><span class="t">エンピリック抗菌薬選択の思考フレームワークを見る</span><span class="s">重症度・敗血症→感染臓器/起因菌→培養→source control→患者背景→選択と用量→治療効果判定</span></span><span class="arrow">›</span></button>';
+    html += '<button class="principles-cta" data-action="goto-spectrum"><span><span class="t">主要抗菌薬スペクトラム早見表を見る</span><span class="s">薬剤ごとのカバー範囲を一覧で確認(概略図・教育用)</span></span><span class="arrow">›</span></button>';
 
     if(state.reviewOnly){
       html += '<div class="section-head"><h2>復習対象の症例</h2><span class="count">'+rev.length+'件</span></div>';
@@ -1417,6 +1506,49 @@
     return html;
   }
 
+  /* ---------------- RENDER: SPECTRUM ---------------- */
+  function spectrumCellHtml(v){
+    if(v==="f") return '<td class="sp-cell sp-full"><span class="sp-bar"></span></td>';
+    if(v==="p") return '<td class="sp-cell sp-partial"><span class="sp-bar"></span></td>';
+    return '<td class="sp-cell"></td>';
+  }
+
+  function renderSpectrum(){
+    var html = "";
+    html += '<div class="principles-hero"><div class="eyebrow">主要抗菌薬スペクトラム早見表</div><h1>薬剤ごとのカバー範囲を一覧で確認</h1><p>個々の薬剤の名前と用量を覚えるより先に、「この薬は何をカバーし、何をカバーしないか」の大枠をつかむための概略図です。実際の選択は感染部位・重症度・培養結果・施設のアンチバイオグラムで調整してください。</p></div>';
+    html += '<div class="sp-legend">'+
+      '<span class="sp-legend-item"><span class="sp-swatch sp-full"></span>一般的な活性</span>'+
+      '<span class="sp-legend-item"><span class="sp-swatch sp-partial"></span>条件付き/菌種・感受性による</span>'+
+      '<span class="sp-legend-item"><span class="sp-swatch"></span>経験的カバーとして扱わない</span>'+
+      '</div>';
+    html += '<div class="sp-scroll"><table class="sp-table"><thead>';
+    html += '<tr class="sp-group-row"><th class="sp-corner" rowspan="2">分類 / 薬剤</th>';
+    SPECTRUM_GROUPS.forEach(function(grp){ html += '<th class="sp-group-head" colspan="'+grp.cols.length+'">'+grp.g+'</th>'; });
+    html += '</tr><tr>';
+    SPECTRUM_GROUPS.forEach(function(grp){ grp.cols.forEach(function(col){ html += '<th class="sp-col-head">'+col.l+'</th>'; }); });
+    html += '</tr></thead><tbody>';
+    var lastCls = null;
+    SPECTRUM_DRUGS.forEach(function(d){
+      if(d.cls !== lastCls){
+        var totalCols = 1;
+        SPECTRUM_GROUPS.forEach(function(grp){ totalCols += grp.cols.length; });
+        html += '<tr class="sp-cls-row"><td colspan="'+totalCols+'">'+d.cls+'</td></tr>';
+        lastCls = d.cls;
+      }
+      html += '<tr><th class="sp-drug-head">'+d.name+'</th>';
+      SPECTRUM_GROUPS.forEach(function(grp){ grp.cols.forEach(function(col){ html += spectrumCellHtml((d.cov||{})[col.k]); }); });
+      html += '</tr>';
+      if(d.note){
+        var totalCols2 = 1;
+        SPECTRUM_GROUPS.forEach(function(grp){ totalCols2 += grp.cols.length; });
+        html += '<tr class="sp-note-row"><td colspan="'+totalCols2+'">'+d.note+'</td></tr>';
+      }
+    });
+    html += '</tbody></table></div>';
+    html += '<div class="principles-foot">AST=薬剤感受性試験、IE=感染性心内膜炎、NVE=自己弁感染性心内膜炎。教育用の概略図であり、投与量・臓器移行性・耐性機序・施設内感受性は別途確認すること。</div>';
+    return html;
+  }
+
   /* ---------------- MASTER RENDER ---------------- */
   function render(){
     var topbarHtml, mainHtml;
@@ -1439,6 +1571,9 @@
     } else if(state.view==="principles"){
       topbarHtml = '<button class="back" data-action="goto-home">‹ 一覧</button><div class="title">抗菌薬選択の思考フレームワーク</div>';
       mainHtml = renderPrinciples();
+    } else if(state.view==="spectrum"){
+      topbarHtml = '<button class="back" data-action="goto-home">‹ 一覧</button><div class="title">抗菌薬スペクトラム早見表</div>';
+      mainHtml = renderSpectrum();
     }
 
     app.innerHTML = '<div class="topbar">'+topbarHtml+'</div><main>'+mainHtml+'</main>';
@@ -1474,6 +1609,8 @@
           render();
         } else if(action==="goto-principles"){
           go("principles");
+        } else if(action==="goto-spectrum"){
+          go("spectrum");
         } else if(action==="reveal"){
           collectDraft(state.caseId, true);
           revealCache[state.caseId] = true;
