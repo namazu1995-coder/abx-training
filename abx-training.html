@@ -1169,7 +1169,8 @@
     {g:"グラム陽性球菌(GPC)", cols:[
       {k:"mrsa", l:"MRSA"},
       {k:"mrcns", l:"MRCNS"},
-      {k:"ent", l:"腸球菌"},
+      {k:"ent_fs", l:"E.faecalis"},
+      {k:"ent_fm", l:"E.faecium"},
       {k:"mssa", l:"MSSA"},
       {k:"strep", l:"連鎖球菌/肺炎球菌"}
     ]},
@@ -1188,11 +1189,11 @@
   ];
 
   var SPECTRUM_DRUGS = [
-    {cls:"ペニシリン", name:"ABPC(ビクシリン)", cov:{ent:"f",strep:"f"}},
-    {cls:"ペニシリン", name:"AMPC(アモキシシリン)", cov:{ent:"f",strep:"f",pek:"p"}, note:"感受性が確認された場合の選択肢。肺炎桿菌は染色体性SHV-1による自然耐性で対象外、大腸菌・プロテウス属も国内耐性率が高く経験的な信頼性は低い"},
-    {cls:"ペニシリン", name:"ABPC/SBT(ユナシン)", cov:{ent:"f",mssa:"f",strep:"f",pek:"f",ham:"f",anaerobe:"f"}, note:"AmpCリスク菌は対象外"},
-    {cls:"ペニシリン", name:"AMPC/CVA(オーグメンチン)", cov:{ent:"f",mssa:"f",strep:"f",pek:"f",ham:"f",anaerobe:"f"}, note:"AmpCリスク菌は対象外"},
-    {cls:"ペニシリン", name:"PIPC/TAZ(タゾピペ)", cov:{ent:"f",mssa:"f",strep:"f",pek:"f",ham:"f",esc:"f",pseudo:"f",anaerobe:"f"}},
+    {cls:"ペニシリン", name:"ABPC(ビクシリン)", cov:{ent_fs:"f",strep:"f"}, note:"E. faeciumはPBP5の性質上アンピシリン系に本来的に耐性で、ペニシリン系全般のカバー対象外(以下同様)"},
+    {cls:"ペニシリン", name:"AMPC(アモキシシリン)", cov:{ent_fs:"f",strep:"f",pek:"p"}, note:"感受性が確認された場合の選択肢。肺炎桿菌は染色体性SHV-1による自然耐性で対象外、大腸菌・プロテウス属も国内耐性率が高く経験的な信頼性は低い"},
+    {cls:"ペニシリン", name:"ABPC/SBT(ユナシン)", cov:{ent_fs:"f",mssa:"f",strep:"f",pek:"f",ham:"f",anaerobe:"f"}, note:"AmpCリスク菌は対象外"},
+    {cls:"ペニシリン", name:"AMPC/CVA(オーグメンチン)", cov:{ent_fs:"f",mssa:"f",strep:"f",pek:"f",ham:"f",anaerobe:"f"}, note:"AmpCリスク菌は対象外"},
+    {cls:"ペニシリン", name:"PIPC/TAZ(タゾピペ)", cov:{ent_fs:"f",mssa:"f",strep:"f",pek:"f",ham:"f",esc:"f",pseudo:"f",anaerobe:"f"}},
     {cls:"セフェム(①第1世代)", name:"①CEZ(セファゾリン)", cov:{mssa:"f",strep:"f"}},
     {cls:"セフェム(①第1世代)", name:"①CEX(セファレキシン)", cov:{mssa:"f",strep:"f"}},
     {cls:"セフェム(②セファマイシン系)", name:"②CMZ(セフメタゾール)", cov:{pek:"f",ham:"p",esc:"p",esbl:"p",anaerobe:"f"}, note:"ESBL産生大腸菌にもcarbapenem-sparingの選択肢になりうる(重症例・感受性未確認例は優先しない)"},
@@ -1200,7 +1201,7 @@
     {cls:"セフェム(③第3世代)", name:"③CTX(セフォタキシム)", cov:{mssa:"f",strep:"f",pek:"f",ham:"f",esc:"p"}, note:"AmpC高リスク菌の侵襲性感染には原則不推奨"},
     {cls:"セフェム(③第3世代)", name:"③CAZ(セフタジジム)", cov:{pek:"f",ham:"p",esc:"f",pseudo:"f"}, note:"グラム陽性球菌のカバーは乏しい。BLNARのインフルエンザ菌にはCTRX/CTXの方が信頼できる"},
     {cls:"セフェム(④第4世代)", name:"④CFPM(セフェピム)", cov:{mssa:"f",strep:"f",pek:"f",ham:"f",esc:"f",pseudo:"f",esbl:"p"}},
-    {cls:"カルバペネム", name:"MEPM(メロペネム)", cov:{ent:"p",mssa:"f",strep:"f",pek:"f",ham:"f",esc:"f",pseudo:"f",esbl:"f",ampc:"f",anaerobe:"f"}, note:"腸球菌はE. faecalisの一部のみ(要AST)。E. faeciumは対象外"},
+    {cls:"カルバペネム", name:"MEPM(メロペネム)", cov:{ent_fs:"p",mssa:"f",strep:"f",pek:"f",ham:"f",esc:"f",pseudo:"f",esbl:"f",ampc:"f",anaerobe:"f"}, note:"E. faecalisも一部のみ感受性あり(要AST)。腸球菌感染の第一選択にはしない"},
     {cls:"アミノグリコシド", name:"GM/AMK(ゲンタマイシン/アミカシン)", cov:{pek:"f",ham:"f",esc:"f",pseudo:"f"}, note:"相乗目的の併用は主にGM(一部の腸球菌・レンサ球菌IE)。ブドウ球菌NVEにroutineで併用しない"},
     {cls:"マクロライド", name:"AZM(ジスロマック)", cov:{intracellular:"f"}, note:"嫌気性菌カバーとして扱わない"},
     {cls:"リンコマイシン", name:"CLDM(クリンダマイシン)", cov:{mssa:"f",strep:"f",anaerobe:"p"}, note:"B. fragilis群の耐性に注意。腹腔内感染の経験的単剤は避ける"},
@@ -1208,7 +1209,7 @@
     {cls:"ST合剤", name:"ST(バクタ、ダイフェン)", cov:{mrsa:"p",mssa:"f",pek:"f",ham:"f",esc:"f",esbl:"p",ampc:"p"}, note:"β溶血性レンサ球菌に対する活性は不安定なため、レンサ球菌のカバーとしては当てにしない"},
     {cls:"ニューキノロン", name:"LVFX(レボフロキサシン)", cov:{pek:"f",ham:"f",esc:"f",pseudo:"f",intracellular:"f"}, note:"嫌気性菌目的には用いない(モキシフロキサシンとは異なる)"},
     {cls:"ニトロイミダゾール", name:"MNZ(メトロニダゾール)", cov:{anaerobe:"f"}},
-    {cls:"グリコペプチド", name:"VCM(バンコマイシン)", cov:{mrsa:"f",mrcns:"f",ent:"f",mssa:"f",strep:"f"}, note:"アンピシリン耐性でもVCM感性なら選択肢。VREには無効"}
+    {cls:"グリコペプチド", name:"VCM(バンコマイシン)", cov:{mrsa:"f",mrcns:"f",ent_fs:"f",ent_fm:"f",mssa:"f",strep:"f"}, note:"アンピシリン耐性でもVCM感性なら選択肢。VRE(E. faeciumに多い)には無効"}
   ];
 
   var STORE_KEY = "abx_progress_v1";
