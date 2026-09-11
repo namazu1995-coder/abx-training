@@ -26,6 +26,10 @@
     --warn-tint:#FBEDDA;
     --bad:#B23A3A;
     --bad-tint:#FBE7E5;
+    --on-primary:#fff;
+    --on-good:#fff;
+    --on-warn:#fff;
+    --on-bad:#fff;
     --shadow: 0 1px 2px rgba(21,30,48,.06), 0 6px 20px rgba(21,30,48,.05);
   }
   @media (prefers-color-scheme: dark){
@@ -48,6 +52,10 @@
       --warn-tint:#33260F;
       --bad:#E27C7C;
       --bad-tint:#3A1B1B;
+      --on-primary:#0B2024;
+      --on-good:#0B2024;
+      --on-warn:#2B1B08;
+      --on-bad:#3A0F0F;
       --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.35);
     }
   }
@@ -70,6 +78,10 @@
     --warn-tint:#33260F;
     --bad:#E27C7C;
     --bad-tint:#3A1B1B;
+    --on-primary:#0B2024;
+    --on-good:#0B2024;
+    --on-warn:#2B1B08;
+    --on-bad:#3A0F0F;
     --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.35);
   }
 
@@ -217,7 +229,7 @@
 
   .reveal-btn{
     width:100%; margin-top:24px; appearance:none; border:none; cursor:pointer;
-    background:var(--primary); color:#fff; font-weight:700; font-size:15px;
+    background:var(--primary); color:var(--on-primary); font-weight:700; font-size:15px;
     padding:15px; border-radius:14px; font-family:inherit;
     box-shadow:0 4px 14px rgba(30,76,140,.28);
     min-height:44px;
@@ -235,10 +247,10 @@
   }
   .answer-card h3 .ico{
     width:22px;height:22px;border-radius:7px;flex:none; display:flex;align-items:center;justify-content:center;
-    font-size:12px; font-weight:900; color:#fff;
+    font-size:12px; font-weight:900;
   }
-  .ico.check{background:var(--primary);}
-  .ico.sum{background:var(--accent);}
+  .ico.check{background:var(--primary); color:var(--on-primary);}
+  .ico.sum{background:var(--accent); color:var(--on-warn);}
   .answer-card ul{ margin:0; padding-left:20px; font-size:14px; color:var(--ink); }
   .answer-card li{ margin-bottom:6px; }
   .answer-card li:last-child{ margin-bottom:0; }
@@ -275,9 +287,9 @@
   .assess-btn.good{ border-color:var(--good); }
   .assess-btn.partial{ border-color:var(--warn); }
   .assess-btn.poor{ border-color:var(--bad); }
-  .assess-btn.good.active{ background:var(--good); color:#fff; }
-  .assess-btn.partial.active{ background:var(--warn); color:#fff; }
-  .assess-btn.poor.active{ background:var(--bad); color:#fff; }
+  .assess-btn.good.active{ background:var(--good); color:var(--on-good); }
+  .assess-btn.partial.active{ background:var(--warn); color:var(--on-warn); }
+  .assess-btn.poor.active{ background:var(--bad); color:var(--on-bad); }
   .save-warning{
     margin-top:12px; padding:10px 14px; border-radius:10px;
     background:var(--bad-tint); color:var(--bad); font-size:12.5px; font-weight:600; line-height:1.5;
@@ -288,12 +300,15 @@
     animation:fadein .3s ease;
   }
   @keyframes fadein{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);} }
+  @media (prefers-reduced-motion: reduce){
+    .after-assess{ animation:none; }
+  }
   .nav-btn{
     appearance:none; border:none; cursor:pointer; border-radius:12px; padding:14px;
     font-family:inherit; font-size:14.5px; font-weight:700; text-align:center;
     min-height:44px;
   }
-  .nav-btn.primary{ background:var(--primary); color:#fff; }
+  .nav-btn.primary{ background:var(--primary); color:var(--on-primary); }
   .nav-btn.ghost{ background:var(--surface-2); color:var(--ink-soft); border:1px solid var(--line); }
 
   /* ---------- PRINCIPLES VIEW ---------- */
@@ -318,7 +333,7 @@
   .flow-step:last-child{ padding-bottom:0; }
   .flow-step .rail{ display:flex; flex-direction:column; align-items:center; flex:none; }
   .flow-step .node{
-    width:32px; height:32px; border-radius:50%; background:var(--primary); color:#fff;
+    width:32px; height:32px; border-radius:50%; background:var(--primary); color:var(--on-primary);
     display:flex; align-items:center; justify-content:center; font-weight:900; font-size:13px;
     font-family:"Zen Kaku Gothic New",sans-serif; flex:none; z-index:1;
   }
@@ -348,7 +363,7 @@
     font-size:12.5px; font-weight:600; font-family:inherit; padding:9px 13px; border-radius:999px;
     cursor:pointer; min-height:38px; transition:background .12s ease, color .12s ease, border-color .12s ease;
   }
-  .sp-tab.active{ background:var(--primary); border-color:var(--primary); color:#fff; }
+  .sp-tab.active{ background:var(--primary); border-color:var(--primary); color:var(--on-primary); }
   .sp-tab-hint{ font-size:11.5px; color:var(--ink-faint); margin:8px 2px 0; line-height:1.5; }
   .sp-scroll{
     overflow-x:auto; -webkit-overflow-scrolling:touch; margin-top:8px;
@@ -496,7 +511,8 @@
           answer:[
             "<mark>男性の発熱性尿路感染症は、それだけで複雑性尿路感染症として扱う</mark>のが原則",
             "本症例はさらに前立腺肥大症という尿路の基礎疾患(通過障害のリスク)を伴っており、<mark>複雑性腎盂腎炎</mark>と判断する",
-            "抗菌薬の選択より先に、<mark>腹部エコーやCTで水腎症・尿路結石・膿瘍などの閉塞機転がないかを確認</mark>する。<mark>閉塞性腎盂腎炎(尿路閉塞を伴う腎盂腎炎)は、どれだけ適切な抗菌薬を選んでも閉塞が解除されなければ増悪・敗血症性ショックに至りうる泌尿器科的緊急疾患</mark>であり、閉塞があれば緊急の尿路ドレナージ(尿管ステント留置や経皮的腎瘻造設)を要する"
+            "抗菌薬の選択より先に、<mark>腹部エコーやCTで水腎症・尿路結石・膿瘍などの閉塞機転がないかを確認</mark>する。<mark>閉塞性腎盂腎炎(尿路閉塞を伴う腎盂腎炎)は、どれだけ適切な抗菌薬を選んでも閉塞が解除されなければ増悪・敗血症性ショックに至りうる泌尿器科的緊急疾患</mark>であり、閉塞があれば緊急の尿路ドレナージ(尿管ステント留置や経皮的腎瘻造設)を要する",
+            "ただしこれは<mark>画像検査の結果を待ってから抗菌薬を開始してよいという意味ではない</mark>。敗血症を疑う所見があれば、<mark>血液培養採取後ただちに抗菌薬投与を開始し、閉塞の有無の確認は並行して進める</mark>"
           ],
           mistakes:["男性の発熱性UTIを女性の単純性腎盂腎炎と同じ枠組みで捉え、尿路の基礎疾患評価(前立腺炎合併・尿路異常の検索)を省略する","抗菌薬さえ選べば良いと考え、閉塞の有無を確認する画像検査(腹部エコー・CT)を初診時にオーダーしない"]
         },
@@ -506,7 +522,7 @@
           answer:[
             "複雑性尿路感染症の主要起因菌は<mark>大腸菌(E. coli)を筆頭に、Klebsiella pneumoniae、Proteus mirabilis</mark>などの腸内細菌目細菌",
             "培養結果が判明するまでは、<mark>直近の抗菌薬使用歴、医療曝露歴、過去の耐性菌(ESBL産生菌など)検出歴</mark>を必ず確認し、耐性リスクの有無で抗菌薬の広さを調整する",
-            "耐性機序としてESBL産生菌だけでなく、<mark>Enterobacter cloacae、Klebsiella aerogenes、Citrobacter freundii、Serratia marcescensなど、染色体性にAmpC型β-ラクタマーゼを持つ菌種(いわゆるSPACE群)</mark>にも注意する。これらはESBL産生菌(最初から耐性)と異なり、<mark>初回の感受性検査でセフトリアキソンなど第3世代セフェムに感受性と出ても、治療中の曝露でAmpCが過剰発現(誘導)し治療中に耐性化しうる</mark>点が特徴"
+            "耐性機序としてESBL産生菌だけでなく、<mark>Enterobacter cloacae、Klebsiella aerogenes、Citrobacter freundii、Serratia marcescensなど、染色体性にAmpC型β-ラクタマーゼを持つ菌種</mark>にも注意する。これらはESBL産生菌(最初から耐性)と異なり、<mark>初回の感受性検査でセフトリアキソンなど第3世代セフェムに感受性と出ても、治療中の曝露でAmpCが過剰発現(誘導)し治療中に耐性化しうる</mark>点が特徴"
           ],
           mistakes:["耐性リスク因子の有無を評価せず、リスクの高低にかかわらず一律に同じ抗菌薬を選んでしまう","患者本人・お薬手帳への抗菌薬使用歴の確認を省略する","ESBL産生菌の有無だけを確認し、Enterobacter属などAmpC過剰産生リスクの高い菌種が検出された際の耐性化リスクを考慮しない"]
         },
@@ -516,7 +532,7 @@
           answer:[
             "耐性リスクが高くなければ、<mark>セフトリアキソン1〜2g 静注 1日1回</mark>を第一選択の一つとする",
             "ESBL産生菌などの耐性リスクが高い場合(施設入所、直近の広域抗菌薬使用、過去のESBL検出歴など)にのみ<mark>カルバペネム系(メロペネム1g 静注 8時間毎など)</mark>を考慮する。リスクがないのに最初から広域を選ぶ必要はない",
-            "過去の培養で<mark>Enterobacter cloacae、Citrobacter freundii、Klebsiella aerogenes、Serratia marcescensなどAmpC過剰産生リスクの高い菌種</mark>が検出されている場合は、感受性検査でセフトリアキソンなど第3世代セフェムが「感受性」と出ても<mark>治療中の耐性化リスクを避けるため選択しない</mark>。目安として<mark>セフェピム1〜2g 静注 1日2〜3回(セフェピムのMICが2μg/mL以下と報告されている場合)</mark>、<mark>MICが4μg/mL以上、または敗血症・菌血症を伴う重症例ではメロペネムなどのカルバペネム系を選択</mark>する。MIC値が数値で報告されない施設も多く、その場合はこの数値にこだわらず<mark>薬剤部・感染症科に相談</mark>して選択すればよい"
+            "過去の培養で<mark>Enterobacter cloacae、Citrobacter freundii、Klebsiella aerogenes、Serratia marcescensなどAmpC過剰産生リスクの高い菌種</mark>が検出されている場合は、感受性検査でセフトリアキソンなど第3世代セフェムが「感受性」と出ても<mark>治療中の耐性化リスクを避けるため選択しない</mark>。目安として<mark>セフェピム1〜2g 静注 1日2〜3回(セフェピムのMICが2μg/mL以下と報告されている場合)</mark>、<mark>MICが4〜8μg/mL(SDD領域)は高用量・延長投与のセフェピムでも治療可能とされるが実臨床では判断が難しく</mark>、<mark>MICが16μg/mL以上、または敗血症・菌血症を伴う重症例ではメロペネムなどのカルバペネム系を選択</mark>する。MIC値が数値で報告されない施設も多く、その場合はこの数値にこだわらず<mark>薬剤部・感染症科に相談</mark>して選択すればよい"
           ],
           mistakes:["耐性リスク因子がないにもかかわらず「念のため」とカルバペネムなど最初から広域抗菌薬を選択してしまう","AmpC過剰産生リスクの高い菌種の既往歴があるのに、初回感受性検査で「セフトリアキソン感受性」という結果だけを見てそのまま選択し、治療中の耐性化を招く"]
         },
@@ -577,7 +593,7 @@
             "化膿性SSTIは<mark>黄色ブドウ球菌(MRSAを含む)</mark>が主体、非化膿性の蜂窩織炎は<mark>β溶血性連鎖球菌(A群溶連菌など)</mark>が主体と、想定する起因菌が異なる",
             "参考: もし本症例に排膿・膿瘍形成・外傷創がなく、<mark>びまん性の発赤・熱感・腫脹のみの典型的な非化膿性蜂窩織炎であれば、ターゲットは連鎖球菌でよくMRSAカバーを追加する根拠はない</mark>。その場合は<mark>セファレキシン500mg 経口 1日4回などのβ-ラクタム単剤で通常十分</mark>で、本症例のようにMRSAカバーの要否を吟味する場面には通常ならない。今回排膿があるからこそ、この吟味が必要になっている",
             "壊死性筋膜炎を示唆する所見は<mark>所見に比して不釣り合いに強い疼痛、水疱・出血性水疱、皮膚の色調変化(暗紫色・壊死)、捻髪音、感覚脱失、時間単位での急速な進行、所見の割に強い全身状態の悪化</mark>など。本症例のバイタルは安定しており、これらの所見は現時点では明記されていないが、<mark>蜂窩織炎と壊死性筋膜炎の初期像は鑑別が難しいことが知られており、経過中も繰り返し評価する</mark>",
-            "LRINECスコア(CRP・WBC・Hb・血清Na・Cr・血糖の6項目)は壊死性筋膜炎を疑う際の補助的ツールとして提唱されているが、<mark>近年の検証ではカットオフ6点以上でも感度は40%台程度にとどまるとの報告があり、スコアが低いことだけで壊死性筋膜炎を除外してはならない</mark>。臨床所見の評価と外科への早期相談が優先される"
+            "LRINECスコア(CRP・WBC・Hb・血清Na・Cr・血糖の6項目)は壊死性筋膜炎を疑う際の補助的ツールとして提唱されているが、<mark>近年の検証では感度が想定より低いとする報告もあり、スコアが低いことだけで壊死性筋膜炎を除外してはならない</mark>。臨床所見の評価と外科への早期相談が優先される"
           ],
           mistakes:["発赤・腫脹があるというだけで一律に「蜂窩織炎=連鎖球菌」と決めつけ、排膿など化膿性所見の有無を確認しない","排膿・膿瘍のない典型的な非化膿性蜂窩織炎に対しても、念のためとMRSAカバーやST合剤を反射的に追加してしまう(化膿性所見がなければセファレキシン単剤で十分なことが多い)","LRINECスコアが低いことだけを根拠に壊死性筋膜炎を否定し、経過観察を優先してしまう"]
         },
@@ -585,7 +601,7 @@
           q:"MRSAのカバーが必要と判断される具体的な状況(リスク因子)を挙げよ。本症例はどれに該当するか。",
           focus:"MRSAカバーのリスク因子",
           answer:[
-            "IDSA基準に基づくと、<mark>化膿性感染で中等症以上(全身性の炎症所見を伴う)、重症(SIRS/敗血症を伴う)、MRSA感染の既往やMRSA保菌が判明している、透析患者、注射薬物使用歴、最近の入院・医療曝露</mark>などがMRSAカバーを考慮する状況",
+            "IDSAの重症度分類では<mark>化膿性感染のうち中等症以上(全身性の炎症所見を伴う)・重症(SIRS/敗血症を伴う)がMRSAカバーを考慮する主軸</mark>となる。<mark>MRSA感染の既往・保菌、透析患者、注射薬物使用歴、最近の入院・医療曝露</mark>などはこれをさらに後押しする補助的なリスク因子として評価する",
             "本症例は排膿を伴う化膿性感染で発熱・WBC上昇を伴い<mark>中等症相当</mark>と判断できるため、MRSAカバーを考慮する対象になる"
           ],
           mistakes:["糖尿病があるという理由だけで自動的にMRSAカバーを追加してしまう(糖尿病自体はIDSA基準のMRSAカバー適応には含まれない)","化膿性所見があるのにMRSAのリスクを検討せず連鎖球菌のみをカバーする薬剤で治療してしまう"]
@@ -648,8 +664,8 @@
           q:"Tokyo Guidelines 2018(TG18)に基づき重症度を評価せよ。",
           focus:"TG18重症度分類の判定基準",
           answer:[
-            "TG18の重症度分類では、<mark>循環障害・中枢神経障害・呼吸障害・腎障害・肝障害・血液凝固障害のいずれかの臓器障害を伴う場合はGrade III(重症)</mark>と判定する",
-            "本症例は<mark>意識障害(中枢神経障害)、血圧低下(循環障害)、Cr上昇(急性腎障害)、血小板減少(血液凝固障害)</mark>を認めており、<mark>Grade III(重症)</mark>に該当する"
+            "TG18の重症度分類では、<mark>循環障害・中枢神経障害・呼吸障害・腎障害(Cr&gt;2.0mg/dL)・肝障害(PT-INR&gt;1.5)・血液学的異常(血小板&lt;10万/μL)のいずれかの臓器障害を伴う場合はGrade III(重症)</mark>と判定する",
+            "本症例は<mark>意識障害(中枢神経障害)、血圧低下(循環障害)、血小板9.2万/μL(血液学的異常)</mark>を認めており、この2項目のみで<mark>Grade III(重症)</mark>に該当する。なおCr 1.6mg/dLは上昇しているが<mark>腎障害の基準(2.0mg/dL超)自体は満たさない</mark>点に注意(基準を満たさない項目まで機械的に数えない)"
           ],
           mistakes:["黄疸・発熱・腹痛の古典的3徴(Charcotの3徴)が揃っているかだけを確認し、臓器障害の有無を個別に評価せず重症度を過小評価する"]
         },
@@ -723,7 +739,7 @@
         },
         {
           q:"このような即時型アレルギーの既往がある患者に、セファロスポリン系抗菌薬を使用してよいか。交差反応性についてどう考えるか。",
-          focus:"側鎖による交差反応の考え方",
+          focus:"セフェム系使用の可否とその判断根拠",
           answer:[
             "ペニシリン-セフェム間の交差反応は<mark>側鎖(R1 side chain)構造の類似性</mark>に強く依存する",
             "側鎖が類似した薬剤同士(例: アモキシシリンとセファレキシン/セファドロキシルなど)は交差反応リスクが相対的に高い(報告により<mark>約16%程度</mark>)一方、側鎖が異なる薬剤同士(第3世代セフェムの多くなど)の交差反応は<mark>低い(全体では約2%程度)</mark>",
@@ -735,7 +751,8 @@
           q:"β-ラクタム系を完全に回避する場合の代替薬選択肢を、本症例(市中肺炎)について具体的に述べよ。",
           focus:"β-ラクタム完全回避時の代替薬",
           answer:[
-            "β-ラクタムを完全に回避する場合、<mark>レスピラトリーキノロン(レボフロキサシン500mg 静注/経口 1日1回)単剤</mark>、または<mark>アズトレオナム1〜2g 静注 8時間毎+アジスロマイシン500mg 静注/経口 1日1回</mark>の組み合わせなどを検討する",
+            "β-ラクタムを完全に回避する場合、<mark>レスピラトリーキノロン(レボフロキサシン500mg 静注/経口 1日1回)単剤</mark>を第一に検討する",
+            "アズトレオナム+アジスロマイシンの組み合わせも選択肢として挙げられることがあるが、<mark>本邦の肺炎球菌はマクロライド耐性率が高く(報告により80%以上)、アジスロマイシンでの肺炎球菌カバーは不確実</mark>なため、この組み合わせより<mark>レボフロキサシン単剤の方が望ましい</mark>",
             "アズトレオナムは側鎖がセフタジジムと類似するため、その組み合わせでの交差反応には注意が必要だが、単純なペニシリンアレルギーでは通常交差反応なく使用できる"
           ],
           mistakes:["代替薬として本来の適応(グラム陽性菌カバー)とは異なるバンコマイシンを安易に選択し、肺炎球菌などのグラム陽性菌はある程度カバーできてもグラム陰性菌カバーが不十分なまま治療してしまう"]
@@ -775,7 +792,7 @@
       id:"neutropenia", num:6, tag:"発熱性好中球減少症",
       hint:"58歳男性・急性骨髄性白血病の寛解導入療法後・発熱",
       vignette:"58歳男性。急性骨髄性白血病の寛解導入化学療法後10日目。訪室時の体温測定で発熱を認めた。悪寒戦慄あり、明らかな感染巣を自覚する症状はない。",
-      data:"BP 98/60　HR 110　RR 20　SpO2 97%(RA)　T 38.6℃(単回測定)／好中球数 180/μL(化学療法前は正常範囲)　WBC 900/μL　CRP 4.1mg/dL　Cr 1.3mg/dL(平常時0.8mg/dLから上昇)／口腔粘膜炎あり、明らかな皮膚発赤・カテーテル刺入部異常なし",
+      data:"BP 98/60　HR 110　RR 20　SpO2 97%(RA)　T 38.6℃／好中球数 180/μL(化学療法前は正常範囲)　WBC 900/μL　CRP 4.1mg/dL　Cr 1.3mg/dL(平常時0.8mg/dLから上昇)／口腔粘膜炎あり、明らかな皮膚発赤・カテーテル刺入部異常なし",
       questions:[
         {
           q:"発熱性好中球減少症(FN)の定義を述べよ。本症例はこれに該当するか。",
@@ -819,6 +836,7 @@
           q:"いつ上級医/感染症科・血液内科に相談すべきか?",
           focus:"相談すべきタイミング",
           answer:[
+            "<mark>FNと診断した時点で、治療への反応を待たず担当血液内科医に報告</mark>する(寛解導入療法中の患者管理は血液内科との共同管理が前提であり、抗菌薬選択も含め初期対応の時点から情報共有する)",
             "初期治療開始後<mark>48〜72時間で解熱が得られない場合</mark>(抗菌薬の変更や真菌感染の評価を検討)",
             "血行動態が不安定化した場合、新たな感染巣(肺浸潤影、カテーテル関連血流感染を示唆する所見など)が出現した場合",
             "腎機能や薬物相互作用で用量調整に迷う場合は、自己判断で継続せず血液内科・感染症科に速やかに相談する"
@@ -935,7 +953,7 @@
         },
         {
           q:"この年齢層で想定すべき起因菌は何か。年齢によって抗菌薬選択がどう変わるか。",
-          focus:"年齢層別の想定起因菌 ・ 50歳以上で追加すべきカバー",
+          focus:"年齢層別の想定起因菌 ・ 年齢によって追加すべきカバーがあるか",
           answer:[
             "成人の細菌性髄膜炎の主要起因菌は年齢を問わず<mark>肺炎球菌(Streptococcus pneumoniae)</mark>が最も多い",
             "<mark>50歳以上、アルコール多飲、免疫不全などの背景がある場合はリステリア菌(Listeria monocytogenes)</mark>も想定に加える必要がある。リステリア菌はセフェム系抗菌薬に自然耐性があり、通常の第3世代セフェムのみでは治療できない",
@@ -947,7 +965,7 @@
           q:"具体的なエンピリック抗菌薬を用量とともに述べよ。デキサメタゾンの併用についても、投与タイミングを含めて述べよ。",
           focus:"具体的な薬剤・用量 ・ デキサメタゾンの投与タイミング",
           answer:[
-            "国内ガイドラインでは50歳以上の免疫能正常例に対し、<mark>セフトリアキソン2g 静注 12時間毎(またはセフォタキシム2g 静注 4〜6時間毎)+バンコマイシン30〜60mg/kg/日 8〜12時間毎(トラフ値15〜20μg/mLを目標に調整)+アンピシリン2〜3g 静注 4時間毎</mark>の3剤併用が推奨されている",
+            "国内ガイドラインでは50歳以上の免疫能正常例に対し、<mark>セフトリアキソン2g 静注 12時間毎(またはセフォタキシム2g 静注 4〜6時間毎)+バンコマイシン30〜60mg/kg/日 8〜12時間毎(トラフ値15〜20μg/mLを目標に調整)+アンピシリン2g 静注 4時間毎</mark>の3剤併用が推奨されている",
             "<mark>肺炎球菌に対する副腎皮質ステロイド薬(デキサメタゾン)の併用は、難聴などの後遺症を減らすエビデンス</mark>があり、<mark>抗菌薬の投与直前(10〜20分前)または同時に開始</mark>する。デキサメタゾン0.15mg/kg 静注 6時間毎を4日間投与する。抗菌薬投与後に追加しても効果は期待できない"
           ],
           mistakes:["バンコマイシンや第3世代セフェム単剤のみで開始し、リステリア菌カバー(アンピシリン)が漏れる","デキサメタゾンを抗菌薬投与後に追加してしまい、効果が期待できないタイミングになる"]
@@ -965,6 +983,7 @@
           q:"いつ上級医/感染症科・脳神経内科に相談すべきか?髄膜炎菌が起因菌と判明した場合、特別な対応は何か。",
           focus:"相談すべきタイミング ・ 髄膜炎菌判明時の特別な対応",
           answer:[
+            "<mark>細菌性髄膜炎を疑った/診断した時点で、治療への反応を待たず直ちに上級医に報告</mark>する。意識障害を伴う本症例のようなケースはICU管理の要否も診断時点から検討する",
             "<mark>治療開始後48〜72時間で解熱・意識レベルの改善が乏しい場合</mark>は、硬膜下膿瘍・水頭症などの合併症評価(画像検査・髄液検査の再検)を検討し、脳神経内科/感染症科に相談する",
             "<mark>髄膜炎菌が起因菌の場合は届出感染症に該当し保健所への届出が必要</mark>。また<mark>飛沫感染するため、濃厚接触者(同居家族、気道分泌物に直接曝露した医療者など)にはリファンピシンなどによる予防投与を検討</mark>する必要があり、感染管理部門・保健所と連携する",
             "意識障害の増悪、瞳孔不同、除脳肢位などの<mark>脳ヘルニア徴候を認めた場合は腰椎穿刺を中止し、直ちに脳神経外科的評価</mark>を要する"
@@ -999,7 +1018,8 @@
           answer:[
             "<mark>敗血症性関節炎を疑ったら、抗菌薬を選ぶ前にまず関節穿刺(診断的かつ治療的)を行う</mark>。関節液のグラム染色・培養・細胞数(多形核球優位。一般に50,000/μL以上で疑われ、100,000/μL以上でより特異的)を確認する",
             "<mark>抗菌薬投与前に関節液・血液培養を採取</mark>する。抗菌薬投与後に穿刺すると関節液の細胞数低下・培養陽性率の低下が生じ、診断の機会を逃す",
-            "関節リウマチの急性増悪や偽痛風など<mark>非感染性の関節炎との鑑別</mark>のためにも、関節液所見の確認が必須である"
+            "関節リウマチの急性増悪や偽痛風など<mark>非感染性の関節炎との鑑別</mark>のためにも、関節液所見の確認が必須である",
+            "ただし<mark>敗血症性ショックを疑う場合は、関節穿刺の手配を待たず血液培養採取後ただちに抗菌薬投与を優先</mark>する。関節穿刺は可能な限り速やかに、遅くとも抗菌薬投与後速やかに行う"
           ],
           mistakes:["抗菌薬を先に開始してから整形外科に相談し、関節穿刺が遅れて関節液所見が偽陰性化する","関節リウマチの既往から「いつもの増悪だろう」と判断し、穿刺による鑑別を省略する"]
         },
@@ -1025,7 +1045,7 @@
         },
         {
           q:"関節液培養からMSSAが判明した。抗菌薬のde-escalation先を述べよ。また、抗菌薬だけで治療は完結するか。",
-          focus:"de-escalation先 ・ source control(関節洗浄)の要否",
+          focus:"de-escalation先 ・ 抗菌薬単独で治療が完結するか",
           answer:[
             "MSSAと判明すれば<mark>セファゾリン2g 静注 8時間毎などのβ-ラクタム系にde-escalation</mark>する",
             "<mark>敗血症性関節炎は抗菌薬単独では治癒しないことが多く、関節液の排膿・洗浄(関節穿刺の反復や関節鏡下洗浄、症例によっては外科的ドレナージ)によるsource controlが必須</mark>。抗菌薬投与後も症状・関節液所見の改善が乏しければ、洗浄術の適応を再評価する",
@@ -1070,13 +1090,13 @@
           answer:[
             "<mark>直近(概ね8〜12週間以内)の抗菌薬使用歴があり、新規の水様下痢(1日3回以上の軟便/水様便)を呈している</mark>ため、Clostridioides difficile感染症(CDI)をまず疑う。広域抗菌薬ほどリスクが高いが、ほぼすべての抗菌薬で起こりうる",
             "<mark>発熱や炎症反応の軽度上昇があっても、これを「新たな細菌感染症の再燃」と捉えて経験的に別の広域抗菌薬を追加するのは誤り</mark>。まず便中のトキシン・GDH抗原・核酸増幅検査(NAAT)による検査を行う",
-            "重症度評価(<mark>WBC≧15,000/μL、Cr上昇(平常値の1.5倍以上)など</mark>)を行い、重症・劇症型でないかを確認する"
+            "重症度評価(<mark>WBC≧15,000/μLまたは血清Cr&gt;1.5mg/dLなど</mark>、2017/2021年IDSA/SHEA改訂での絶対値基準)を行い、重症・劇症型でないかを確認する"
           ],
           mistakes:["新規の発熱・炎症反応上昇を「別の感染症」と解釈し、経験的に広域抗菌薬を追加してしまう","抗菌薬使用歴を確認せず、下痢の原因検索(CDI検査)を後回しにする"]
         },
         {
           q:"CDIが強く疑われる、または検査で確定した。まず行うべき対応は何か。",
-          focus:"原因抗菌薬の中止 ・ 支持療法と感染対策",
+          focus:"初期対応で優先すべき項目",
           answer:[
             "<mark>可能であれば原因と考えられる抗菌薬(本症例ではセフトリアキソン)を中止</mark>する。原因薬の中止だけで軽症例は改善することがある",
             "<mark>止痢薬(ロペラミド等)は毒素の排出を妨げ症状を悪化させる可能性があるため、原則として使用を避ける</mark>",
@@ -1088,15 +1108,15 @@
           q:"CDI治療薬を具体的に用量とともに述べよ。メトロニダゾールを第一選択にしてよいか。",
           focus:"具体的な薬剤・用量 ・ メトロニダゾールの位置づけ",
           answer:[
-            "国内ガイドラインでは<mark>非重症例の第一選択はメトロニダゾール500mg 経口/静注 1日3回 10日間</mark>、<mark>重症例(WBC≧15,000/μLまたはCr上昇など)の第一選択は経口バンコマイシン125mg 1日4回 10日間</mark>である",
-            "海外(2021年IDSA/SHEA改訂)では非重症例でも<mark>経口バンコマイシンまたはフィダキソマイシンが第一選択</mark>となり、メトロニダゾールの位置づけは以前より後退している。国内ガイドラインとの間にこの点で差があることを知っておく",
+            "2021年IDSA/SHEA改訂以降、<mark>非重症例でも経口バンコマイシン125mg 1日4回 10日間、またはフィダキソマイシンが第一選択</mark>とする専門家が増えている。メトロニダゾールの位置づけは以前より後退している",
+            "国内ガイドラインは<mark>非重症例の選択肢としてメトロニダゾール500mg 経口/静注 1日3回 10日間</mark>を残しているが、優先度は下がっている。<mark>重症例(WBC≧15,000/μLまたはCr&gt;1.5mg/dLなど)の第一選択は経口バンコマイシン125mg 1日4回 10日間</mark>である点は国内外で一致している",
             "<mark>メトロニダゾールは10日を超える投与や高用量(1,500mg/日以上)で末梢神経障害・中枢神経障害のリスクが上がる</mark>ため、非重症・短期の位置づけを踏まえて使用する"
           ],
           mistakes:["重症例にもメトロニダゾール単剤で押し通してしまう(重症では経口バンコマイシンが第一選択)","メトロニダゾールを漫然と10日を超えて継続し、神経障害のリスクを意識しない"]
         },
         {
           q:"治療開始後、腹部膨満が増悪し発熱・意識レベル低下を認めた。何を疑うか。対応は?",
-          focus:"劇症型(fulminant)CDIの認識 ・ 外科的介入の要否",
+          focus:"急変時に評価すべき所見 ・ 外科的介入の要否",
           answer:[
             "<mark>中毒性巨大結腸症・腸管穿孔・敗血症性ショックを伴う難治例・劇症型CDI</mark>を疑う所見であり、腹部単純X線・CTによる評価を急ぐ",
             "難治例では<mark>経口バンコマイシン500mg 1日4回への増量、必要に応じて注腸バンコマイシンや静注メトロニダゾールの併用</mark>を検討する",
@@ -1137,7 +1157,7 @@
     {t:"source controlが必要な感染巣ではないか判断する", d:"膿瘍・閉塞性腎盂腎炎・重症胆管炎・壊死性軟部組織感染症・感染したカテーテル/デバイスなど、ドレナージや閉塞解除・異物抜去がなければどれだけ適切な抗菌薬を選んでも改善しない病態がないかを、抗菌薬選択より先に確認する。該当すれば直ちに外科・泌尿器科・消化器内科など該当科に相談する。"},
     {t:"患者背景を確認する", d:"アレルギー歴(症状・発症時間・重症度)、腎機能、免疫状態(好中球数・臓器移植・ステロイド使用など)、直近の抗菌薬使用歴・医療曝露歴・耐性菌検出歴を確認する。"},
     {t:"抗菌薬が今すぐ必要かを判断し、必要ならエンピリック選択と投与量・投与経路を決定する", d:"想定起因菌・重症度・患者背景を踏まえ、必要十分な抗菌スペクトラムの薬剤を選ぶ(カバーすべき菌だけでなく、カバーしなくてよい菌も意識する)。無症候性細菌尿・ウイルス性上気道炎・コンタミネーションなど、抗菌薬を急いで開始しなくてよい/不要なことが多い状況もある(下記コラム参照)。用量・投与間隔・投与経路は腎機能による調整を含め具体的に決める。"},
-    {t:"治療効果を判定し、de-escalationと治療期間を決定する", d:"①自覚症状、②バイタルサイン、③臓器特異的症状、④グラム染色所見の4つを総合して「効いているか」を判断する。培養結果が判明したら、感受性のある狭域抗菌薬へ変更できないか必ず検討する。治療期間はガイドラインの目安と臨床的安定度に基づいて決定し、漫然と継続しない。"}
+    {t:"治療効果を判定し、de-escalationと治療期間を決定する", d:"①自覚症状、②バイタルサイン、③臓器特異的症状、④グラム染色所見の4つを総合して「効いているか」を判断する。培養結果が判明したら、感受性のある狭域抗菌薬へ変更できないか必ず検討する。治療期間はガイドラインの目安と臨床的安定度に基づいて決定し、漫然と継続しない。診断時点・治療反応が乏しい時点のいずれも、上級医/感染症科への相談タイミングとして判断すること自体が治療方針決定の一部である。"}
   ];
 
   var NEVER_MISS = [
@@ -1151,16 +1171,17 @@
     {t:"感染性心内膜炎", d:"黄色ブドウ球菌菌血症では特に念頭に置く。心エコーを省略しない。"},
     {t:"黄色ブドウ球菌菌血症", d:"コンタミネーションとして扱わない。培養再検・心エコー・感染症科コンサルトが必須。"},
     {t:"カンジダ血症", d:"重症・免疫不全・広域抗菌薬長期使用患者の血液培養は真菌も意識する。眼科診察も検討。"},
-    {t:"感染デバイス(人工弁・人工関節など)", d:"埋め込み型異物の感染は多くの場合、除去なしに抗菌薬だけでは制御できない。"}
+    {t:"感染デバイス(人工弁・人工関節など)", d:"埋め込み型異物の感染は多くの場合、除去なしに抗菌薬だけでは制御できない。"},
+    {t:"脊椎・硬膜外膿瘍", d:"発熱+背部痛+神経症状(脱力・膀胱直腸障害)。黄色ブドウ球菌菌血症の転移巣としても生じる。診断の遅れは不可逆的な麻痺につながる。"}
   ];
 
   var SKIP_ABX = [
     {t:"無症候性細菌尿", d:"妊婦・泌尿器処置前を除き、症状のない細菌尿は治療不要。培養だけを理由に治療しない。"},
     {t:"ウイルス性上気道炎・急性気管支炎", d:"多くは自然軽快する。膿性痰や画像所見だけで細菌性と決めつけない。"},
-    {t:"血液培養のコンタミネーション", d:"複数セット中1セットのみ、かつ皮膚常在菌(CNS等)なら再検を優先し安易に治療しない。"},
-    {t:"誤嚥性肺臓炎(化学性)", d:"誤嚥直後で無菌性の炎症が主体のことがある。発熱・浸潤影のみで即抗菌薬とせず経過を見る選択肢もある。"},
+    {t:"血液培養のコンタミネーション", d:"複数セット中1セットのみ、かつ皮膚常在菌(コアグラーゼ陰性ブドウ球菌(CNS)等)なら再検を優先し安易に治療しない。"},
+    {t:"誤嚥性肺臓炎(化学性)", d:"誤嚥直後で無菌性の炎症が主体のことがある。発熱・浸潤影のみで即抗菌薬とせず経過を見る選択肢もあるが、48時間前後経過観察しても解熱・改善がない、または悪化する場合は細菌性肺炎として抗菌薬を開始する。"},
     {t:"薬剤熱・非感染性発熱", d:"感染源が同定できず、被疑薬中止で解熱する場合は抗菌薬を漫然と続けない。"},
-    {t:"無症状のカンジダ尿", d:"カテーテル関連が多く、多くは治療不要。カテーテル交換・抜去で対応できることが多い。"},
+    {t:"無症状のカンジダ尿", d:"カテーテル関連が多く、多くは治療不要でカテーテル交換・抜去を優先するが、好中球減少患者・泌尿器処置前は例外的に治療対象となる。"},
     {t:"MRSA保菌(感染ではない)", d:"鼻腔・皮膚の保菌のみでは全身治療の対象にならない。感染徴候の有無を必ず確認する。"}
   ];
 
@@ -1200,7 +1221,7 @@
     {cls:"セフェム(③第3世代)", name:"③CTRX(セフトリアキソン)", cov:{mssa:"f",strep:"f",pek:"f",ham:"f",esc:"p"}, note:"AmpC高リスク菌の侵襲性感染には原則不推奨"},
     {cls:"セフェム(③第3世代)", name:"③CTX(セフォタキシム)", cov:{mssa:"f",strep:"f",pek:"f",ham:"f",esc:"p"}, note:"AmpC高リスク菌の侵襲性感染には原則不推奨"},
     {cls:"セフェム(③第3世代)", name:"③CAZ(セフタジジム)", cov:{pek:"f",ham:"p",esc:"f",pseudo:"f"}, note:"グラム陽性球菌のカバーは乏しい。BLNARのインフルエンザ菌にはCTRX/CTXの方が信頼できる"},
-    {cls:"セフェム(④第4世代)", name:"④CFPM(セフェピム)", cov:{mssa:"f",strep:"f",pek:"f",ham:"f",esc:"f",pseudo:"f",esbl:"p"}},
+    {cls:"セフェム(④第4世代)", name:"④CFPM(セフェピム)", cov:{mssa:"f",strep:"f",pek:"f",ham:"f",esc:"f",pseudo:"f",esbl:"p",ampc:"p"}, note:"AmpC過剰産生菌にはMIC低値(≦2μg/mL)確認例で選択肢。重症例・MIC高値はカルバペネムを優先"},
     {cls:"カルバペネム", name:"MEPM(メロペネム)", cov:{ent_fs:"p",mssa:"f",strep:"f",pek:"f",ham:"f",esc:"f",pseudo:"f",esbl:"f",ampc:"f",anaerobe:"f"}, note:"E. faecalisも一部のみ感受性あり(要AST)。腸球菌感染の第一選択にはしない"},
     {cls:"アミノグリコシド", name:"GM/AMK(ゲンタマイシン/アミカシン)", cov:{pek:"f",ham:"f",esc:"f",pseudo:"f"}, note:"相乗目的の併用は主にGM(一部の腸球菌・レンサ球菌IE)。ブドウ球菌NVEにroutineで併用しない"},
     {cls:"マクロライド", name:"AZM(ジスロマック)", cov:{intracellular:"f"}, note:"嫌気性菌カバーとして扱わない"},
@@ -1209,7 +1230,7 @@
     {cls:"ST合剤", name:"ST(バクタ、ダイフェン)", cov:{mrsa:"p",mssa:"f",pek:"f",ham:"f",esc:"f",esbl:"p",ampc:"p"}, note:"β溶血性レンサ球菌に対する活性は不安定なため、レンサ球菌のカバーとしては当てにしない"},
     {cls:"ニューキノロン", name:"LVFX(レボフロキサシン)", cov:{pek:"f",ham:"f",esc:"f",pseudo:"f",intracellular:"f"}, note:"嫌気性菌目的には用いない(モキシフロキサシンとは異なる)"},
     {cls:"ニトロイミダゾール", name:"MNZ(メトロニダゾール)", cov:{anaerobe:"f"}},
-    {cls:"グリコペプチド", name:"VCM(バンコマイシン)", cov:{mrsa:"f",mrcns:"f",ent_fs:"f",ent_fm:"f",mssa:"f",strep:"f"}, note:"アンピシリン耐性でもVCM感性なら選択肢。VRE(E. faeciumに多い)には無効"}
+    {cls:"グリコペプチド", name:"VCM(バンコマイシン)", cov:{mrsa:"f",mrcns:"f",ent_fs:"f",ent_fm:"p",mssa:"f",strep:"f"}, note:"アンピシリン耐性でもVCM感性なら選択肢。VRE(E. faeciumに多い)には無効なため感受性確認前提で選択する"}
   ];
 
   var STORE_KEY = "abx_progress_v1";
@@ -1221,8 +1242,16 @@
       return (p && typeof p === "object" && !Array.isArray(p)) ? p : {};
     }catch(e){ return {}; }
   }
-  function saveProgress(p){
-    try{ localStorage.setItem(STORE_KEY, JSON.stringify(p)); return true; }catch(e){ return false; }
+  // Re-reads current storage and merges in only this case's status, so a save from another
+  // tab in between doesn't get silently clobbered by a stale in-memory snapshot.
+  function saveProgress(caseId, status){
+    try{
+      var current = loadProgress();
+      current[caseId] = status;
+      localStorage.setItem(STORE_KEY, JSON.stringify(current));
+      state.progress = current;
+      return true;
+    }catch(e){ return false; }
   }
   function loadDrafts(){
     try{
@@ -1241,8 +1270,15 @@
       return clean;
     }catch(e){ return {}; }
   }
-  function saveDrafts(d){
-    try{ localStorage.setItem(DRAFT_KEY, JSON.stringify(d)); return true; }catch(e){ return false; }
+  // Same read-merge-write reasoning as saveProgress, keyed per-case.
+  function saveDrafts(caseId, fields){
+    try{
+      var current = loadDrafts();
+      current[caseId] = fields;
+      localStorage.setItem(DRAFT_KEY, JSON.stringify(current));
+      draftCache = current;
+      return true;
+    }catch(e){ return false; }
   }
 
   (function validateCasesData(){
@@ -1286,6 +1322,7 @@
   var app = document.getElementById("app");
 
   function escapeHtml(s){
+    s = (s===null || s===undefined) ? "" : String(s);
     return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;");
   }
 
@@ -1454,7 +1491,7 @@
   }
 
   function answerCard(n, qq){
-    var html = '<div class="answer-card"><h3><span class="ico check">'+n+'</span>設問'+n+'の考え方</h3>';
+    var html = '<div class="answer-card"'+(n===1?' tabindex="-1"':'')+'><h3><span class="ico check" aria-hidden="true">'+n+'</span>設問'+n+'の考え方</h3>';
     html += '<ul>'+qq.answer.map(function(t){return '<li>'+t+'</li>';}).join("")+'</ul>';
     if(qq.mistakes && qq.mistakes.length){
       html += '<div class="mistake-box"><b>よくある誤答</b><ul>'+qq.mistakes.map(function(t){return '<li>'+t+'</li>';}).join("")+'</ul></div>';
@@ -1464,7 +1501,7 @@
   }
 
   function summaryCard(summary){
-    var html = '<div class="answer-card"><h3><span class="ico sum">✓</span>症例のまとめ</h3>';
+    var html = '<div class="answer-card"><h3><span class="ico sum" aria-hidden="true">✓</span>症例のまとめ</h3>';
     html += '<ul>'+summary.points.map(function(t){return '<li>'+t+'</li>';}).join("")+'</ul>';
     if(summary.refs && summary.refs.length){
       html += '<div class="refs-box"><b>参考文献</b><ol>'+summary.refs.map(refItemHtml).join("")+'</ol></div>';
@@ -1484,7 +1521,8 @@
   }
 
   function assessBtn(kind, label, cur){
-    return '<button class="assess-btn '+kind+(cur===kind?' active':'')+'" data-action="assess" data-kind="'+kind+'">'+label+'</button>';
+    var active = cur===kind;
+    return '<button class="assess-btn '+kind+(active?' active':'')+'" data-action="assess" data-kind="'+kind+'" aria-pressed="'+active+'">'+label+'</button>';
   }
 
   /* ---------------- RENDER: PRINCIPLES ---------------- */
@@ -1498,7 +1536,7 @@
     html += '<div class="flow">';
     PRINCIPLES.forEach(function(f,i){
       html += '<div class="flow-step">';
-      html += '<div class="rail"><div class="node">'+(i+1)+'</div>'+(i<PRINCIPLES.length-1?'<div class="stem"></div>':'')+'</div>';
+      html += '<div class="rail"><div class="node" aria-hidden="true">'+(i+1)+'</div>'+(i<PRINCIPLES.length-1?'<div class="stem"></div>':'')+'</div>';
       html += '<div class="content"><h3>'+f.t+'</h3><p>'+f.d+'</p></div>';
       html += '</div>';
     });
@@ -1538,6 +1576,7 @@
       '<span class="sp-legend-item"><span class="sp-swatch sp-partial"></span>条件付き/菌種・感受性による</span>'+
       '<span class="sp-legend-item"><span class="sp-swatch"></span>経験的カバーとして扱わない</span>'+
       '</div>';
+    html += '<p class="sp-tab-hint">PEK=Proteus mirabilis/大腸菌(E. coli)/肺炎桿菌(Klebsiella pneumoniae)、HaM=インフルエンザ菌(Haemophilus influenzae)/モラクセラ(Moraxella catarrhalis)、ESC=Enterobacter/Serratia/Citrobacterなど染色体性AmpC型β-ラクタマーゼを持ちうる菌種群。</p>';
 
     html += '<div class="sp-tabs">';
     html += '<button class="sp-tab'+(state.spectrumGroup==="all"?' active':'')+'" data-action="filter-spectrum" data-group="all">すべて</button>';
@@ -1648,14 +1687,17 @@
           revealCache[state.caseId] = true;
           render();
           var firstAnswer = app.querySelector(".answer-card");
-          if(firstAnswer) firstAnswer.scrollIntoView({behavior:"smooth", block:"start"});
+          if(firstAnswer){
+            var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+            firstAnswer.scrollIntoView({behavior: reduceMotion ? "auto" : "smooth", block:"start"});
+            firstAnswer.focus({preventScroll:true});
+          }
         } else if(action==="assess"){
           var kind = el.getAttribute("data-kind");
           var c0 = caseById(state.caseId);
           if(!c0) return;
           pendingStatus[state.caseId] = kind;
-          state.progress[state.caseId] = kind;
-          lastSaveFailed = !saveProgress(state.progress);
+          lastSaveFailed = !saveProgress(state.caseId, kind);
           render();
         } else if(action==="next-case"){
           var c = caseById(state.caseId);
@@ -1678,15 +1720,6 @@
   var draftSaveTimer = null;
   var draftSaveFailed = false;
 
-  function persistDrafts(){
-    var onDisk = loadDrafts();
-    var merged = {};
-    Object.keys(onDisk).forEach(function(id){ merged[id] = onDisk[id]; });
-    Object.keys(draftCache).forEach(function(id){ merged[id] = draftCache[id]; });
-    draftSaveFailed = !saveDrafts(merged);
-    return merged;
-  }
-
   function collectDraft(caseId, flushNow){
     var d = {};
     app.querySelectorAll("textarea[data-field]").forEach(function(ta){
@@ -1695,14 +1728,21 @@
     draftCache[caseId] = d;
     if(draftSaveTimer){ clearTimeout(draftSaveTimer); draftSaveTimer = null; }
     if(flushNow){
-      persistDrafts();
+      draftSaveFailed = !saveDrafts(caseId, d);
     } else {
-      draftSaveTimer = setTimeout(persistDrafts, 400);
+      draftSaveTimer = setTimeout(function(){ draftSaveFailed = !saveDrafts(caseId, d); }, 400);
     }
   }
-  window.addEventListener("pagehide", persistDrafts);
+  // Best-effort: flush the currently-open case's pending draft if the tab is closed/
+  // backgrounded before the debounce timer fires.
+  function flushCurrentDraft(){
+    if(state.view === "case" && state.caseId && draftCache[state.caseId]){
+      saveDrafts(state.caseId, draftCache[state.caseId]);
+    }
+  }
+  window.addEventListener("pagehide", flushCurrentDraft);
   document.addEventListener("visibilitychange", function(){
-    if(document.visibilityState === "hidden") persistDrafts();
+    if(document.visibilityState === "hidden") flushCurrentDraft();
   });
 
   render();
